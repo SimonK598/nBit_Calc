@@ -1,0 +1,3 @@
+# nBit_Calc
+Programm to calculate simple SINGLE operator terms (1+1; maxint\*2; etc) without CPU-Register limitations.
+Floats are blizzard soon (tm) implemented...
