@@ -3,6 +3,7 @@ include ("conv.inc");
 // include ("ascii.inc");
 // include ("./convert.inc");
 
+
 function convhex2String(result2Conv){
     result = <>;
     idx = sizeof(result2Conv) - 1;
@@ -204,6 +205,7 @@ struct nCalc{
     function addi ();
 
     procedure printCalc();
+    procedure leading0();
 
     // function convert2String(result2Conv);
 
@@ -233,6 +235,30 @@ procedure nCalc.printCalc(){
         echo "this.swap:        TRUE" # endl;
     }
     echo "|-----------------------------------|\n";
+}
+
+procedure nCalc.leading0(){
+    minusSign = FALSE;
+    idx = 0;
+    while(TRUE){
+        if(this.result[idx] == "0"){
+            idx++;
+        }else{
+            if (this.result[idx] == "-"){
+                minusSign = TRUE;
+                idx++;
+            }else{
+                // remove 0s and add sign if needed
+                if (minusSign){
+                    this.result = "-" # this.result[idx..$];
+                    break;
+                }else{
+                    this.result = this.result[idx..$];
+                    break;
+                }
+            }
+        }
+    }
 }
 
 function nCalc.divi(){
@@ -320,8 +346,6 @@ function nCalc.subt(){
 
         num3 = num1 - num2;
         // echo "num3: " # form("%d", num3) # endl;
-
-        // dont add 0 if length is reached
         if(nr2Len == 0 && nr1Len == 0){
             if (num3 != 0){
                 result = num3 # result;
@@ -375,6 +399,8 @@ function nCalc.subt(){
     if(swap){
         this.result = "-" # this.result;
     }
+
+    this:leading0();
 
 }
 
@@ -533,12 +559,12 @@ function splitTerm(term){
 }
 
 procedure testSub(){
-    idx1 = 0;
+    idx1 = 500;
     idx2 = 0;
     toBreak = FALSE;
     nCalc test;
-    while(idx1 < 100){
-        while(idx2 < 200){
+    while(idx1 < 550){
+        while(idx2 < 20000){
             // echo "idx1: " # form("%d", idx1) # ", idx2: " # form("%d", idx2) # endl;
 
             sol = idx1 - idx2;
@@ -568,8 +594,8 @@ procedure testSub(){
                 // echo "-----------------------------------------\n";
                 // echo "calc was correct: " # endl;
                 // test:printCalc();
-                a = 0;
                 // echo "-----------------------------------------\n";
+                a = 0;
             }
             idx2++;
         }
@@ -579,6 +605,7 @@ procedure testSub(){
         idx2 = 0;
         idx1++;
     }
+    echo "test successfull -> no errors encountered\n";
 }
 
 procedure testAdd(){
