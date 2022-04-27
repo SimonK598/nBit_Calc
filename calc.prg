@@ -117,7 +117,8 @@ function convert2String(result2Conv){
             default:
                 // echo "error at index: " # idx # endl;
                 // echo "[convert2String]--> found this: " # form("%C", result2Conv[idx]) # endl;
-                echo "\n";
+                // echo "\n";
+                a = 0;
         }
         idx = idx - 1;
     }
@@ -143,7 +144,7 @@ function max(lenA, lenB){
 
 function maxi(nr1, nr2){
 
-    echo "find max between: " # nr1 # ", and : " # nr2 # endl;
+    // echo "find max between: " # nr1 # ", and : " # nr2 # endl;
 
     if (nr1 |==| nr2){
         // nr1 is equal to nr2
@@ -158,16 +159,16 @@ function maxi(nr1, nr2){
         // echo "nr1[idx]: " # convert2String(nr1[idx]) # endl;
         // echo "nr2[idx]: " # convert2String(nr2[idx]) # endl;
         num1 = scan("%d",nr1[idx]);
-        echo "nr1[idx]: " # form("%d",scan("%d",nr1[idx])) # endl;
+        // echo "nr1[idx]: " # form("%d",scan("%d",nr1[idx])) # endl;
         num2 = scan("%d",nr2[idx]);
-        echo "nr2[idx]: " # form("%d",scan("%d",nr2[idx])) # endl;
+        // echo "nr2[idx]: " # form("%d",scan("%d",nr2[idx])) # endl;
         num3 = num1 + num2;
-        echo "debug num3: " # form("%d", num3) # endl;
+        // echo "debug num3: " # form("%d", num3) # endl;
         if (num1 > num2){
-            echo "nr1: " # form("%d", num1) # " is bigger than nr2: " # form("%d", num2) # endl;
+            // echo "nr1: " # form("%d", num1) # " is bigger than nr2: " # form("%d", num2) # endl;
             return 1;
         }else{
-            if(num1 == num 2){
+            if(num1 == num2){
                 // vals at idx are same -> continue;
                 idx++;
             }else{
@@ -243,8 +244,9 @@ function nCalc.mult(){
 }
 
 function nCalc.subt(){
-    echo "subt was called...\n";
-    this:printCalc();
+    // echo "subt was called...\n";
+    // this:printCalc();
+
     
     swap = FALSE;
     
@@ -254,7 +256,7 @@ function nCalc.subt(){
     // echo "stage 1\n";
     if (biggerLen == -1){
         // nr2 is longer (therefore bigger) -> swap nr1 with nr2
-        echo "swap bc of biggerLen/max()\n";
+        // echo "swap bc of biggerLen/max()\n";
         tmpNr1 = this.nr1;
         this.nr1 = this.nr2;
         this.nr2 = tmpNr1;
@@ -275,7 +277,7 @@ function nCalc.subt(){
                 return 0;
             }else{
                 if (maxiRet == -1){
-                    echo "swap bc of biggerVal/maxi()\n";
+                    // echo "swap bc of biggerVal/maxi()\n";
                     tmpNR1 = this.nr1;
                     this.nr1 = this.nr2;
                     this.nr2 = tmpNR1;
@@ -318,6 +320,8 @@ function nCalc.subt(){
 
         num3 = num1 - num2;
         // echo "num3: " # form("%d", num3) # endl;
+
+        // dont add 0 if length is reached
         if(nr2Len == 0 && nr1Len == 0){
             if (num3 != 0){
                 result = num3 # result;
@@ -362,7 +366,7 @@ function nCalc.subt(){
     }
 
     // echo "Sub result before conversion is: " # endl;
-    echo form("%C",result) # endl;
+    // echo form("%C",result) # endl;
 
 
     // echo "calling convert2String...\n";
@@ -533,9 +537,9 @@ procedure testSub(){
     idx2 = 0;
     toBreak = FALSE;
     nCalc test;
-    while(idx1 < 55){
-        while(idx2 < 66){
-            echo "idx1: " # form("%d", idx1) # ", idx2: " # form("%d", idx2) # endl;
+    while(idx1 < 100){
+        while(idx2 < 200){
+            // echo "idx1: " # form("%d", idx1) # ", idx2: " # form("%d", idx2) # endl;
 
             sol = idx1 - idx2;
             // echo "sol is: " # form("%d",sol) # endl;
@@ -561,10 +565,11 @@ procedure testSub(){
                 break;
             }
             else{
-                echo "-----------------------------------------\n";
-                echo "calc was correct: " # endl;
-                test:printCalc();
-                echo "-----------------------------------------\n";
+                // echo "-----------------------------------------\n";
+                // echo "calc was correct: " # endl;
+                // test:printCalc();
+                a = 0;
+                // echo "-----------------------------------------\n";
             }
             idx2++;
         }
@@ -599,16 +604,16 @@ procedure testAdd(){
 procedure main (){
 
     // testAdd();
-    // testSub();
+    testSub();
 
 
-    term = ARGV.[1];
-    echo sizeof(ARGV.[1]);
-    nCalc toCalc;
-    toCalc = splitTerm(&term);
-    echo "----------------------------------------\n";
-    // echo "finally: " # toCalc.result # endl;
-    toCalc:printCalc();
+    // term = ARGV.[1];
+    // echo sizeof(ARGV.[1]);
+    // nCalc toCalc;
+    // toCalc = splitTerm(&term);
+    // echo "----------------------------------------\n";
+    // // echo "finally: " # toCalc.result # endl;
+    // toCalc:printCalc();
     // testChain = <09 08 07 06 05 04 03 02 01 00>;
     // nCalc testCalc;
     // testCalc:Create(1, 2);
