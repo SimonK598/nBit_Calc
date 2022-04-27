@@ -5,9 +5,11 @@ Floats are blizzard soon (tm) implemented...
   - Addition: 
     - Ints only (*for now*)
     - calculations above/below 64bit-Signed-Int limit
+    - Test successful!
   - Subtraction:
     - Ints only (*for now*)
     - calculations above/below 64bit-Signed-Int limit
+    - Test successful!
   - Multiplication:
     - // TODO
     - // use multiple additions or implment manual method?
