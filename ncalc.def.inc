@@ -1,6 +1,12 @@
 struct nCalc{
     .nr1;
+    .nr1decCount;
+    .nr1decPos;
+
     .nr2;
+    .nr2decCount;
+    .nr2decPos;
+
     .operator;
     .result;
     .swap;

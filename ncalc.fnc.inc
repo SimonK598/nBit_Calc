@@ -2,8 +2,40 @@
 // Numbers (nr1/nr2) are literal hex values of chars in String ("0" -> [0x30], "12" -> [0x31,0x32])
 procedure nCalc.Create(nr1, nr2, op){
     this.nr1 = nr1;
+    nr1decCount = -1;
+    nr1decPos = -1;
+    nr1dec = FALSE;
+    idx1 = 0;
+    while(idx1 < sizeof (this.nr1)){
+        if (this.nr1[idx1] == ","){
+            nr1dec = TRUE;
+            nr1decPos = idx1;
+        }
+        if(nr1dec == TRUE){
+            nr1decCount++;
+        }
+        idx1++;
+    }
+    this.nr1 = this.nr1[0..(nr1decPos-1)] # this.nr1[(nr1decPos+1)..$];
+
     // echo "[Create] nr1: " # form("%C", this.nr1) # endl;
     this.nr2 = nr2;
+    nr2decCount = -1;
+    nr2decPos = -1;
+    nr2dec = FALSE;
+    idx2 = 0;
+    while(idx2 < sizeof (this.nr1)){
+        if (this.nr2[idx2] == ","){
+            nr2dec = TRUE;
+            nr2decPos = idx2;
+        }
+        if(nr2dec == TRUE){
+            nr2decCount++;
+        }
+        idx2++;
+    }
+    this.nr2 = this.nr2[0..(nr2decPos-1)] # this.nr2[(nr2decPos+1)..$];
+
     // echo "[Create] nr2: " # form("%C", this.nr2) # endl;
     this.operator = op;
     this.result = <>;

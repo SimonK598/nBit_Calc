@@ -139,8 +139,8 @@ procedure testAdd(){
 
 procedure selfTestAS(){
     breaking = FALSE;
-    idx1 = 1;
-    idx2 = 1;
+    idx1 = 0;
+    idx2 = 0;
     counter = 0;
     nCalc testA;
     nCalc testS;
@@ -180,12 +180,12 @@ procedure selfTestAS(){
 
 procedure selfTestSA(){
     breaking = FALSE;
-    idx1 = 1;
-    idx2 = 1;
+    idx1 = 500;
+    idx2 = 0;
     counter = 0;
     nCalc testA;
     nCalc testS;
-    while (idx1 < 150){
+    while (idx1 < 750){
         while (idx2 < 300){
             ~testA;
             ~testS;
@@ -194,12 +194,12 @@ procedure selfTestSA(){
             testS:Create(form("%d",idx1), form("%d",idx2), "-");
             testS:subt();
             // testS:printCalc();
-            testA:Create(testA.result, form("%d",idx2), "+");
+            testA:Create(testS.result, form("%d",idx2), "+");
             testA:addi();
             // testA:printCalc();
-            if (testS.result != form("%d",idx1)){
+            if (testA.result != form("%d",idx1)){
                 echo "Encountered error at idx1: " # form("%d",idx1) # ", idx2: " # form("%d",idx2) # ".\n";
-                echo "Expected result: " # form("%d",idx1) # ", but was: " # testS.result # endl;
+                echo "Expected result: " # form("%d",idx1) # ", but was: " # testA.result # endl;
                 echo ".-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-\n";
                 testA:printCalc();
                 testS:printCalc();
@@ -268,7 +268,4 @@ procedure main (){
         }
         idx++;
     }
-
-    // echo sizeof(ARGV.[1]);
-
 }

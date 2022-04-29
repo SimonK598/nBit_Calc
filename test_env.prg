@@ -89,13 +89,32 @@ function maxi(nr1, nr2){
 
 procedure main(){
 
-    sol = sub(12,0);
-    echo "sol: " # form("%C",sol) # endl;
+    stri = "01234,56789";
+    nr1decCount = -1;
+    nr1decPos = -1;
+    nr1dec = FALSE;
+    idx1 = 0;
+    while(idx1 < sizeof (stri)){
+        if (stri[idx1] == ","){
+            nr1dec = TRUE;
+            nr1decPos = idx1;
+        }
+        if(nr1dec == TRUE){
+            nr1decCount++;
+        }
+        idx1++;
+    }
+    stri = stri[0..(nr1decPos-1)] # stri[(nr1decPos+1)..$];
+    echo stri # endl;
 
-    strg = "12";
-    strgS = <>;
-    strgS = strg # strgS;
-    echo "custom: " # form("%C", strgS);
+
+    // sol = sub(12,0);
+    // echo "sol: " # form("%C",sol) # endl;
+
+    // strg = "12";
+    // strgS = <>;
+    // strgS = strg # strgS;
+    // echo "custom: " # form("%C", strgS);
 
     // nr1 = <>;
     // nr2 = <>;
