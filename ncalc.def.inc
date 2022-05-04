@@ -18,6 +18,7 @@ struct nCalc{
 
     procedure printCalc();
     procedure leading0();
+    
 
     // function convert2String(result2Conv);
 

@@ -17,8 +17,8 @@ function splitTerm(term){
         {
             case "+":
                 echo "todo: addition\n";
-                echo "nr1: " # term[0..idx-1] # endl;
-                echo "nr2: " # term[idx+1..strLen-1] # endl;
+                // echo "nr1: " # term[0..idx-1] # endl;
+                // echo "nr2: " # term[idx+1..strLen-1] # endl;
                 toCalc:Create(term[0..idx-1], term[idx+1..strLen-1], "+");
 
                 // toCalc.nr1 = term[0..idx-1];
@@ -30,8 +30,8 @@ function splitTerm(term){
                 break;
             case "-":
                 // echo "todo: subtraction\n";
-                echo "nr1: " # term[0..idx-1] # endl;
-                echo "nr2: " # term[idx+1..strLen-1] # endl;
+                // echo "nr1: " # term[0..idx-1] # endl;
+                // echo "nr2: " # term[idx+1..strLen-1] # endl;
                 toCalc:Create(term[0..idx-1], term[idx+1..strLen-1], "-");
 
                 // toCalc.nr1 = term[0..idx-1];
@@ -43,8 +43,8 @@ function splitTerm(term){
                 break;
             case "*":
                 echo "todo: multiplication\n";
-                echo "nr1: " # term[0..idx-1] # endl;
-                echo "nr2: " # term[idx+1..strLen-1] # endl;
+                // echo "nr1: " # term[0..idx-1] # endl;
+                // echo "nr2: " # term[idx+1..strLen-1] # endl;
                 toCalc:Create(term[0..idx-1], term[idx+1..strLen-1], "*");
                 
                 // toCalc.nr1 = term[0..idx-1];
@@ -56,8 +56,8 @@ function splitTerm(term){
                 break;
             case "/":
                 echo "todo: division\n";
-                echo "nr1: " # term[0..idx-1] # endl;
-                echo "nr2: " # term[idx+1..strLen-1] # endl;
+                // echo "nr1: " # term[0..idx-1] # endl;
+                // echo "nr2: " # term[idx+1..strLen-1] # endl;
                 toCalc:Create(term[0..idx-1], term[idx+1..strLen-1], "/");
 
                 // toCalc.nr1 = term[0..idx-1];

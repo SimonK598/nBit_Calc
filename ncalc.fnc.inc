@@ -2,17 +2,17 @@
 // Numbers (nr1/nr2) are literal hex values of chars in String ("0" -> [0x30], "12" -> [0x31,0x32])
 procedure nCalc.Create(nr1, nr2, op){
     this.nr1 = nr1;
-    nr1decCount = -1;
-    nr1decPos = -1;
+    this.nr1decPos = -1;
+    this.nr1decCount = -1;
     nr1dec = FALSE;
     idx1 = 0;
     while(idx1 < sizeof (this.nr1)){
         if (this.nr1[idx1] == ","){
             nr1dec = TRUE;
-            nr1decPos = idx1;
+            this.nr1decPos = idx1;
         }
         if(nr1dec == TRUE){
-            nr1decCount++;
+            this.nr1decCount++;
         }
         idx1++;
     }
@@ -45,14 +45,15 @@ procedure nCalc.Create(nr1, nr2, op){
 procedure nCalc.printCalc(){
     echo "|-[printCalc]-----------------------|\n";
     echo "this.nr1:         " # this.nr1 # endl;
+    echo "this.nr1decCount: " # this.nr1decCount # endl;
     echo "this.nr2:         " # this.nr2 # endl;
-    echo "this.operator:    " # this.operator # endl;
-    echo "this.result:      " # this.result # endl;
     if (this.swap |==| <00>){
         echo "this.swap:        FALSE" # endl;
     }else{
         echo "this.swap:        TRUE" # endl;
     }
+    echo "this.operator:    " # this.operator # endl;
+    echo "this.result:      " # this.result # endl;
     echo "|-----------------------------------|\n";
 }
 
