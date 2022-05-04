@@ -2,59 +2,117 @@
 // Numbers (nr1/nr2) are literal hex values of chars in String ("0" -> [0x30], "12" -> [0x31,0x32])
 procedure nCalc.Create(nr1, nr2, op){
     this.nr1 = nr1;
+    nr1decCount = 0;
     this.nr1decPos = -1;
-    this.nr1decCount = -1;
     nr1dec = FALSE;
     idx1 = 0;
     while(idx1 < sizeof (this.nr1)){
+        if(nr1dec == TRUE){
+            nr1decCount++;
+        }
         if (this.nr1[idx1] == ","){
             nr1dec = TRUE;
             this.nr1decPos = idx1;
         }
-        if(nr1dec == TRUE){
-            this.nr1decCount++;
-        }
         idx1++;
     }
-    this.nr1 = this.nr1[0..(nr1decPos-1)] # this.nr1[(nr1decPos+1)..$];
+    this.nr1 = this.nr1[0..(this.nr1decPos-1)] # this.nr1[(this.nr1decPos+1)..$];
 
     // echo "[Create] nr1: " # form("%C", this.nr1) # endl;
     this.nr2 = nr2;
-    nr2decCount = -1;
-    nr2decPos = -1;
+    nr2decCount = 0;
+    this.nr2decPos = -1;
     nr2dec = FALSE;
     idx2 = 0;
-    while(idx2 < sizeof (this.nr1)){
-        if (this.nr2[idx2] == ","){
-            nr2dec = TRUE;
-            nr2decPos = idx2;
-        }
+    while(idx2 < sizeof (this.nr2)){
         if(nr2dec == TRUE){
             nr2decCount++;
         }
+        if (this.nr2[idx2] == ","){
+            nr2dec = TRUE;
+            this.nr2decPos = idx2;
+        }
         idx2++;
     }
-    this.nr2 = this.nr2[0..(nr2decPos-1)] # this.nr2[(nr2decPos+1)..$];
+    this.nr2 = this.nr2[0..(this.nr2decPos-1)] # this.nr2[(this.nr2decPos+1)..$];
+
+    if (nr1dec == TRUE || nr2dec == TRUE){
+        // echo "n1dc: " # form("%d", nr1decCount) # endl;
+        // echo "n2dc: " # form("%d", nr2decCount) # endl;
+        this:following0(nr1decCount, nr2decCount);
+        // this.hasDP = TRUE;
+        // maxAB = maxInt(nr1decCount, nr2decCount);
+        // switch (maxAB){
+        //     case (1):
+        //         this.decCount = nr1decCount;
+        //         zeroApp = <>;
+        //         decDiff = (nr1decCount - nr2decCount) - 1;
+        //         idx = 0;
+        //         while(idx < decDiff){
+        //             zeroApp = zeroApp # "0";
+        //             idx = idx + 1;
+        //         }
+        //         this.nr2 = this.nr2 # zeroApp;
+        //         break;
+        //     case (0):
+        //         break;
+        //     case (-1):
+        //         this.decCount = nr2decCount;
+        //         zeroApp = <>;
+        //         decDiff = nr2decCount - nr1decCount;
+        //         idx = 0;
+        //         while(idx < decDiff){
+        //             zeroApp = zeroApp # "0";
+        //             idx = idx + 1;
+        //         }
+        //         this.nr1 = this.nr1 # zeroApp;
+        //         break;
+        //     default:
+        //         break;
+        // }
+    }else{
+        this.hasDP = FALSE;
+        this.decCount = 0;
+    }
 
     // echo "[Create] nr2: " # form("%C", this.nr2) # endl;
     this.operator = op;
     this.result = <>;
     this.swap = FALSE;
+
+    // this:printCalc();
 }
 
 procedure nCalc.printCalc(){
-    echo "|-[printCalc]-----------------------|\n";
-    echo "this.nr1:         " # this.nr1 # endl;
-    echo "this.nr1decCount: " # this.nr1decCount # endl;
-    echo "this.nr2:         " # this.nr2 # endl;
-    if (this.swap |==| <00>){
-        echo "this.swap:        FALSE" # endl;
+    echo "|-[printCalc]----------------------->\n";
+    if (this.hasDP |==| <00>){
+        echo "|this.nr1:         " # this.nr1 # endl;
     }else{
-        echo "this.swap:        TRUE" # endl;
+        this:addDP(1);
+        echo "|this.nr1:         " # this.nr1 # endl;
     }
-    echo "this.operator:    " # this.operator # endl;
-    echo "this.result:      " # this.result # endl;
-    echo "|-----------------------------------|\n";
+    // echo "this.nr1decCount: " # form("%d",this.nr1decCount) # endl;
+    if (this.hasDP |==| <00>){
+        echo "|this.nr2:         " # this.nr2 # endl;
+    }else{
+        this:addDP(2);
+        echo "|this.nr2:         " # this.nr2 # endl;
+    }
+    if (this.swap |==| <00>){
+        echo "|this.swap:        FALSE" # endl;
+    }else{
+        echo "|this.swap:        TRUE" # endl;
+    }
+    echo "|this.operator:    " # this.operator # endl;
+    echo "|this.result:      " # this.result # endl;
+    if (this.hasDP |==| <00>){
+        echo "|this.hasDP:       FALSE" # endl;
+    }else{
+        echo "|this.hasDP:       TRUE" # endl;
+    }
+    echo "|this.decCount:    " # form("%d", this.decCount) # endl;
+    
+    echo "|----------------------------------->\n";
 }
 
 procedure nCalc.leading0(){
@@ -78,6 +136,65 @@ procedure nCalc.leading0(){
                 }
             }
         }
+    }
+}
+
+procedure nCalc.following0(n1dc, n2dc){
+    this.hasDP = TRUE;
+    maxAB = maxInt(n1dc, n2dc);
+    echo "maxAB: " # form("%d", maxAB) # endl;
+    switch (maxAB){
+        case (1):
+            this.decCount = n1dc;
+            zeroApp = <>;
+            decDiff = (n1dc - n2dc);
+            idx = 0;
+            while(idx < decDiff){
+                zeroApp = zeroApp # "0";
+                idx = idx + 1;
+            }
+            this.nr2 = this.nr2 # zeroApp;
+            break;
+        case (-1):
+            this.decCount = n2dc;
+            zeroApp = <>;
+            decDiff = (n2dc - n1dc);
+            idx = 0;
+            while(idx < decDiff){
+                zeroApp = zeroApp # "0";
+                idx = idx + 1;
+            }
+            this.nr1 = this.nr1 # zeroApp;
+            break;
+        default:
+        this.decCount = n1dc;
+            break;
+    }
+}
+
+procedure nCalc.addDP(mod){
+    switch (mod){
+        case 1:
+            strLen = sizeof (this.nr1);
+            strp1 = this.nr1[0..(strLen-this.decCount)-1];
+            strp2 = this.nr1[(strLen-this.decCount)..$];
+            this.nr1 = <>;
+            this.nr1 = strp1 # "," # strp2;
+            break;
+        case 2:
+            strLen = sizeof (this.nr2);
+            strp1 = this.nr2[0..(strLen-this.decCount)-1];
+            strp2 = this.nr2[(strLen-this.decCount)..$];
+            this.nr2 = <>;
+            this.nr2 = strp1 # "," # strp2;
+            break;
+        case 3:
+            strLen = sizeof (this.result);
+            strp1 = this.result[0..(strLen-this.decCount)-1];
+            strp2 = this.result[(strLen-this.decCount)..$];
+            this.result = <>;
+            this.result = strp1 # "," # strp2;
+            break;
     }
 }
 
@@ -221,6 +338,9 @@ function nCalc.subt(){
     }
 
     this:leading0();
+    if (this.hasDP){
+        this:addDP(3);
+    }
 
 }
 
@@ -306,6 +426,14 @@ function nCalc.addi(){
     }
     // echo "calling convert2String...\n";
     this.result = convert2String(result);
+    if(this.hasDP){
+        this:addDP(3);
+        // strLen = sizeof (this.result);
+        // strp1 = this.result[0..(strLen-this.decCount)-1];
+        // strp2 = this.result[(strLen-this.decCount)..$];
+        // this.result = <>;
+        // this.result = strp1 # "," # strp2;
+    }
 
     // echo "---------[/addi]--------\n";
 }

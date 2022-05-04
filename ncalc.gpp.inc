@@ -185,3 +185,16 @@ function maxi(nr1, nr2){
     // echo "1\n" # endl;
     return 1;
 }
+
+
+function maxInt(a, b){
+    if (a == b){
+        return 0;
+    }else{
+        if(a > b){
+            return 1;
+        }else{
+            return -1;
+        }
+    }
+}
