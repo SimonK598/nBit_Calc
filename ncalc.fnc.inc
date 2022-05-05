@@ -116,27 +116,47 @@ procedure nCalc.printCalc(){
 }
 
 procedure nCalc.leading0(){
-    minusSign = FALSE;
+    // minusSign = FALSE;
+    runLoop = TRUE;
     idx = 0;
-    while(TRUE){
-        if(this.result[idx] == "0"){
-            idx++;
-        }else{
-            if (this.result[idx] == "-"){
-                minusSign = TRUE;
+    while(runLoop){
+        // echo "l0 idx: " # form("%d",idx) # endl;
+        switch (this.result[idx]) {
+            case ("0"):
                 idx++;
-            }else{
-                // remove 0s and add sign if needed
-                if (minusSign){
-                    this.result = "-" # this.result[idx..$];
-                    break;
-                }else{
-                    this.result = this.result[idx..$];
-                    break;
-                }
-            }
+                break;
+            case (","):
+                runLoop = FALSE;
+                this.result = "0" # this.result[idx..$];
+                break;
+            default:
+                runLoop = FALSE;
+                this.result = this.result[idx..$];
+                break;
         }
+
+
+        // if(this.result[idx] == "0"){
+        //     idx++;
+        // }else{
+        //     if (this.result[idx] == "-"){
+        //         minusSign = TRUE;
+        //         idx++;
+        //     }else{
+        //         // remove 0s and add sign if needed
+        //         if (minusSign){
+        //             this.result = "-" # this.result[idx..$];
+        //             break;
+        //         }else{
+        //             this.result = this.result[idx..$];
+        //             break;
+        //         }
+        //     }
+        // }
     }
+    // if (minusSign){
+    //     this.result = "-" # this.result;
+    // }
 }
 
 procedure nCalc.following0(n1dc, n2dc){
@@ -333,13 +353,13 @@ function nCalc.subt(){
     // echo "calling convert2String...\n";
     this.result = convert2String(result);
 
-    if(swap){
-        this.result = "-" # this.result;
-    }
 
-    this:leading0();
     if (this.hasDP){
         this:addDP(3);
+    }
+    this:leading0();
+    if(swap){
+        this.result = "-" # this.result;
     }
 
 }

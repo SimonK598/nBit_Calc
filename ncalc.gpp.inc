@@ -60,6 +60,8 @@ function convhex2String(result2Conv){
 }
 
 function convert2String(result2Conv){
+    
+    // echo "result2conv:: " # form("%C",result2Conv) # endl;
     result = <>;
     idx = sizeof(result2Conv) - 1;
     // echo "passed result2conv is: " # form("%d", result2Conv) # endl;
