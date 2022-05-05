@@ -1,6 +1,6 @@
 # nBit_Calc
 Programm to calculate simple SINGLE operator terms (1+1; maxint\*2; etc) without CPU-Register limitations.
-Floats are blizzard soon (tm) implemented...
+Reals are ~~blizzard soon (tm)~~ implemented~~...~~!
 # *Currently working*:
   - Addition: 
     - Ints and real numbers (',' as decimal point) 
