@@ -144,8 +144,8 @@ procedure selfTestAS(){
     counter = 0;
     nCalc testA;
     nCalc testS;
-    while (idx1 < 150){
-        while (idx2 < 300){
+    while (idx1 < 500){
+        while (idx2 < 1000){
             ~testA;
             ~testS;
             nCalc testA;
@@ -164,15 +164,19 @@ procedure selfTestAS(){
                 testS:printCalc();
                 breaking = TRUE;
                 break;
-            }else{
-                echo "pass: " # form("%d", counter) # endl;
             }
-            counter++;
+            // else{
+            //     echo "pass: " # form("%d", counter) # endl;
+            // }
+            // counter++;
             idx2++;
         }
         if(breaking){
             break;
+        }else{
+            echo "pass: " # form("%d", counter) # endl;
         }
+        counter++;
         idx2 = 0;
         idx1++;
     }
@@ -185,8 +189,8 @@ procedure selfTestSA(){
     counter = 0;
     nCalc testA;
     nCalc testS;
-    while (idx1 < 750){
-        while (idx2 < 300){
+    while (idx1 < 1000){
+        while (idx2 < 500){
             ~testA;
             ~testS;
             nCalc testA;
@@ -205,15 +209,19 @@ procedure selfTestSA(){
                 testS:printCalc();
                 breaking = TRUE;
                 break;
-            }else{
-                echo "pass: " # form("%d", counter) # endl;
             }
-            counter++;
+            // else{
+            //     echo "pass: " # form("%d", counter) # endl;
+            // }
+            // counter++;
             idx2++;
         }
         if(breaking){
             break;
+        }else{
+            echo "pass: " # form("%d", counter) # endl;
         }
+        counter++;
         idx2 = 0;
         idx1++;
     }

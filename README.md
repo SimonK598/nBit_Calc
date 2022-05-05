@@ -11,8 +11,9 @@ Reals are ~~blizzard soon (tm)~~ implemented ~~...~~ !
     - calculations above/below 64bit-Signed-Int limit
     - **Test successful!**
   - Multiplication:
-    - // TODO
-    - // use multiple additions or implment manual method?
+    - Ints and real numbers (',' as decimal point)
+    - calculations above/below 64bit-Signed-Int limit
+    - **NOT YET TESTED**
   - Division:
     - // TODO
     - // use multiple subtractions or implment manual method?
