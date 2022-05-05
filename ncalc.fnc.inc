@@ -121,7 +121,7 @@ procedure nCalc.rmleading0(){
 procedure nCalc.following0(n1dc, n2dc){
     this.hasDP = TRUE;
     maxAB = maxInt(n1dc, n2dc);
-    echo "maxAB: " # form("%d", maxAB) # endl;
+    // echo "maxAB: " # form("%d", maxAB) # endl;
     switch (maxAB){
         case (1):
             this.decCount = n1dc;

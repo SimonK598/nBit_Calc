@@ -16,7 +16,7 @@ function splitTerm(term){
         switch (term[idx]) with |==|
         {
             case "+":
-                echo "todo: addition\n";
+                // echo "todo: addition\n";
                 // echo "nr1: " # term[0..idx-1] # endl;
                 // echo "nr2: " # term[idx+1..strLen-1] # endl;
                 toCalc:Create(term[0..idx-1], term[idx+1..strLen-1], "+");
@@ -42,7 +42,7 @@ function splitTerm(term){
                 return toCalc;
                 break;
             case "*":
-                echo "todo: multiplication\n";
+                // echo "todo: multiplication\n";
                 // echo "nr1: " # term[0..idx-1] # endl;
                 // echo "nr2: " # term[idx+1..strLen-1] # endl;
                 toCalc:Create(term[0..idx-1], term[idx+1..strLen-1], "*");
@@ -165,10 +165,6 @@ procedure selfTestAS(){
                 breaking = TRUE;
                 break;
             }
-            // else{
-            //     echo "pass: " # form("%d", counter) # endl;
-            // }
-            // counter++;
             idx2++;
         }
         if(breaking){
