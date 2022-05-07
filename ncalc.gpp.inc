@@ -159,7 +159,7 @@ function maxi(nr1, nr2){
         // echo "nr1[idx]: " # form("%d",scan("%d",nr1[idx])) # endl;
         num2 = scan("%d",nr2[idx]);
         // echo "nr2[idx]: " # form("%d",scan("%d",nr2[idx])) # endl;
-        num3 = num1 + num2;
+        // num3 = num1 + num2;
         // echo "debug num3: " # form("%d", num3) # endl;
         if (num1 > num2){
             // echo "nr1: " # form("%d", num1) # " is bigger than nr2: " # form("%d", num2) # endl;

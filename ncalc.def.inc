@@ -20,6 +20,7 @@ struct nCalc{
     function addi ();
 
     procedure printCalc();
+    procedure swapNrs();
     procedure leading0();
     procedure following0(n1dc,n2dc);
     procedure addDP(mod);

@@ -78,6 +78,14 @@ procedure nCalc.printCalc(){
     echo "|----------------------------------->\n";
 }
 
+procedure nCalc.swapNrs(){
+    tmpN1 = this.nr1;
+    this.nr1 = this.nr2;
+    this.nr2 = tmpN1;
+    ~tmpN1;
+    this.swap = TRUE;
+}
+
 procedure nCalc.leading0(){
     runLoop = TRUE;
     idx = 0;
@@ -190,23 +198,78 @@ function nCalc.divi(){
     n1len = sizeof(this.nr1);
     n2len = sizeof(this.nr2);
     
-    nCalc preMul[9];
+    nCalc preMul.[];
     
     idx = 0;
     while(idx < 9){
-        preMul[idx]:Create(this.nr2, idx+1);
-        preMul[idx]:mult();
+        preMul.[idx]:Create(this.nr2, idx+1, "*");
+        preMul.[idx]:mult();
         idx++;
     }
+    
+    above = this.nr1[idx..idx+n2len-1];
+    n1Curpos = idx+n2len;
+    nCalc inbtw;
+    inbtw:Create("0","0","-");
 
-    while (true){
-        if (n1len < n2len){
+    idx = 0;
+    calculating = TRUE;
+    while (calculating){
+        if (maxi(above, this.nr2 == -1)){
+            above = above # this.nr1[n1Curpos];
+            n1Curpos++;
+            this.result = this.result # "0";
+            continue; 
+        }
 
-        }else{
-            if( (n1len == n2len) || (n1len > n2len)){
-                
+        jidx = 4;
+        jidx_c = jidx;
+        found = FALSE;
+        while (!found){
+            switch (maxi(preMul.[jidx].result, above)){
+                // premul result is bigger -> go lower || if previous was lower -> found
+                case (1):
+                    if(jidx_c < jidx){
+                        found = TRUE;
+                        jidx = jidx_c;
+                    }else{
+                        if (jidx_c > jidx){
+                            jidx_c = jidx;
+                            jidx = jidx - 1;
+                        }else{
+                            jidx = jidx - 1;
+                        }
+                    }
+                    jidx_c = jidx;
+                    jidx = jidx - 1;
+                    break;
+                // premul result is equal -> found
+                case (0):
+                    found = TRUE;
+                    break;
+                // premul is smaller -> check previous and go up if prev was smaller
+                case (-1):
+                    if (jidx_c > jidx){
+                        found = TRUE;
+                        jidx = jidx_c;
+                    }else{
+                        if (jidx_c < jidx){
+                            jidx_c = jidx;
+                            jidx++;
+                        }else{
+                            jidx++;
+                        }
+                    }
+                    break;
             }
         }
+        this.result = this.result # form("%d", jidx);
+
+        inbtw.nr1 = above;
+        inbtw.nr2 = preMul.[jidx].result;
+        inbtw:subt();
+        above = inbtw.result;
+
     }
 
     echo "divi() done!\n";
@@ -222,11 +285,12 @@ function nCalc.mult(){
     n2len = sizeof(this.nr2);
 
     if (maxInt(n1len, n2len) == 1){
-        tmp1 = this.nr1;
-        this.nr1 = this.nr2;
-        this.nr2 = tmp1;
-        ~tmp1;
-            
+        // tmp1 = this.nr1;
+        // this.nr1 = this.nr2;
+        // this.nr2 = tmp1;
+        // ~tmp1;
+        this:swapNrs();
+
         n1len = sizeof(this.nr1);
         // echo "n1l: " # form("%d", n1len) # endl;
         n2len = sizeof(this.nr2);
@@ -279,15 +343,18 @@ function nCalc.subt(){
     biggerLen = max(nr1Len,nr2Len);
     if (biggerLen == -1){
         // nr2 is longer (therefore bigger) -> swap nr1 with nr2
-        tmpNr1 = this.nr1;
-        this.nr1 = this.nr2;
-        this.nr2 = tmpNr1;
-        ~tmpNr1;
+        // tmpNr1 = this.nr1;
+        // this.nr1 = this.nr2;
+        // this.nr2 = tmpNr1;
+        // ~tmpNr1;
+        // this.swap = TRUE;
+
+        this:swapNrs();
+        
         nr1LenTMP = nr1Len;
         nr1Len = nr2Len;
         nr2Len = nr1LenTMP;
         ~nr1LenTMP;
-        this.swap = TRUE;
         swap = TRUE;
     }else{
         if (biggerLen == 0){
@@ -300,12 +367,15 @@ function nCalc.subt(){
             }else{
                 if (maxiRet == -1){
                     // echo "swap bc of biggerVal/maxi()\n";
-                    tmpNR1 = this.nr1;
-                    this.nr1 = this.nr2;
-                    this.nr2 = tmpNR1;
+                    // tmpNR1 = this.nr1;
+                    // this.nr1 = this.nr2;
+                    // this.nr2 = tmpNR1;
+                    // this.swap = TRUE;
+
+                    this:swapNrs();
+
                     nr1Len = sizeof(this.nr1)-1;
                     nr2Len = sizeof(this.nr2)-1;
-                    this.swap = TRUE;
                     swap = TRUE;
                 }else{
                     swap = FALSE;
@@ -391,10 +461,13 @@ function nCalc.addi(){
 
     if (biggerLen == -1){
         // nr2 longer than nr1 -> swap this.nr1 and this.nr2 and its according lengths 
-        tmpNr1 = this.nr1;
-        this.nr1 = this.nr2;
-        this.nr2 = tmpNr1;
-        ~tmpNr1;
+        // tmpNr1 = this.nr1;
+        // this.nr1 = this.nr2;
+        // this.nr2 = tmpNr1;
+        // ~tmpNr1;
+        
+        this:swapNrs();
+
         nr1LenTMP = nr1Len;
         nr1Len = nr2Len;
         nr2Len = nr1LenTMP;
