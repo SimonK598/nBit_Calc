@@ -1,4 +1,8 @@
-include ("std.inc");
+include("std.inc");
+include ("conv.inc");
+include ("./ncalc.gpp.inc");
+include ("./ncalc.def.inc");
+include ("./ncalc.fnc.inc");
 
 function convert2String(result2Conv){
     result = <>;
@@ -88,7 +92,7 @@ function maxi(nr1, nr2){
 }
 
 procedure main(){
-
+    /* 
     stri = "01234,56789";
     nr1decCount = -1;
     nr1decPos = -1;
@@ -105,7 +109,7 @@ procedure main(){
         idx1++;
     }
     stri = stri[0..(nr1decPos-1)] # stri[(nr1decPos+1)..$];
-    echo stri # endl;
+    echo stri # endl */;
 
 
     // sol = sub(12,0);

@@ -185,7 +185,31 @@ procedure nCalc.addDP(mod){
 // >>> Actual math  <<< 
 
 function nCalc.divi(){
-    echo "todo\n";
+    echo "divi()...\n";
+    
+    n1len = sizeof(this.nr1);
+    n2len = sizeof(this.nr2);
+    
+    nCalc preMul[9];
+    
+    idx = 0;
+    while(idx < 9){
+        preMul[idx]:Create(this.nr2, idx+1);
+        preMul[idx]:mult();
+        idx++;
+    }
+
+    while (true){
+        if (n1len < n2len){
+
+        }else{
+            if( (n1len == n2len) || (n1len > n2len)){
+                
+            }
+        }
+    }
+
+    echo "divi() done!\n";
 }
 
 function nCalc.mult(){
