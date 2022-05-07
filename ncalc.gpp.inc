@@ -166,7 +166,9 @@ procedure removeP0(str){
 }
 
 function maxi(nr1, nr2){
-
+    
+    echo "hex n1:" # form("%C", nr1) # endl;
+    echo "hex n2:" # form("%C", nr2) # endl;
     removeP0(&nr1);
     removeP0(&nr2);
     echo "hex n1:" # form("%C", nr1) # endl;
@@ -180,14 +182,15 @@ function maxi(nr1, nr2){
 
     switch (max(nr1Len, nr2Len)){
         case (1):
-            echo "swreturn 1\n";
+            // echo "sw-return 1\n";
             return 1;
         case (-1):
-            // echo "swreturn -1\n";
+            // echo "sw-return -1\n";
             return -1;
         case (0):
             if (nr1 |==| nr2){
                 // nr1 is equal to nr2
+                // echo "sw-return 0\n";
                 return 0;
             }
             break;
@@ -200,9 +203,9 @@ function maxi(nr1, nr2){
         // echo "nr1[idx]: " # convert2String(nr1[idx]) # endl;
         // echo "nr2[idx]: " # convert2String(nr2[idx]) # endl;
         num1 = scan("%d",nr1[idx]);
-        // echo "nr1[idx]: " # form("%d",scan("%d",nr1[idx])) # endl;
+        echo "nr1[idx]: " # form("%d",scan("%d",nr1[idx])) # endl;
         num2 = scan("%d",nr2[idx]);
-        // echo "nr2[idx]: " # form("%d",scan("%d",nr2[idx])) # endl;
+        echo "nr2[idx]: " # form("%d",scan("%d",nr2[idx])) # endl;
         // num3 = num1 + num2;
         // echo "debug num3: " # form("%d", num3) # endl;
         if (num1 > num2){
@@ -218,16 +221,6 @@ function maxi(nr1, nr2){
                 // echo "returning -1\n";
                 return -1;
             }
-            // nr2 is bigger 
-            // (to be here both numbers need to be the same length so checking for index is not required)
-        
-            // if (idx < nr1Len-1){
-            //     echo "-1" # endl;
-            //     return -1;
-            // }
-        
-            // echo "-1" # endl;
-            // return -1;
         }
     }
     // echo "1\n" # endl;
