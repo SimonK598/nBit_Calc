@@ -142,14 +142,23 @@ function max(lenA, lenB){
 function maxi(nr1, nr2){
 
     // echo "find max between: " # nr1 # ", and : " # nr2 # endl;
-
-    if (nr1 |==| nr2){
-        // nr1 is equal to nr2
-        return 0;
-    }
-    // nr1 and nr2 are NOT equal -> go bytewise till one or the other is bigger
     nr1Len = sizeof(nr1);
     nr2Len = sizeof(nr2);
+
+    switch (max(nr1Len, nr2Len)){
+        case (1):
+            return 1;
+        case (-1):
+            return -1;
+        case (0):
+            if (nr1 |==| nr2){
+                // nr1 is equal to nr2
+                return 0;
+            }
+            break;
+    }
+
+    // nr1 and nr2 are NOT equal -> go bytewise till one or the other is bigger
     idx = 0;
     while (idx < nr1Len){
         // echo "idx: " # form("%d",idx) # endl;
@@ -172,16 +181,6 @@ function maxi(nr1, nr2){
                 // nr2 is bigger -> return -1
                 return -1;
             }
-            // nr2 is bigger 
-            // (to be here both numbers need to be the same length so checking for index is not required)
-        
-            // if (idx < nr1Len-1){
-            //     echo "-1" # endl;
-            //     return -1;
-            // }
-        
-            // echo "-1" # endl;
-            // return -1;
         }
     }
     // echo "1\n" # endl;
