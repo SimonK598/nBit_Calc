@@ -7,6 +7,6 @@ include ("./ncalc.fnc.inc");
 
 procedure main(){
 
-    echo "maxi: " # form("%d", maxi("103", "302"));
+    echo "maxi: " # form("%d", maxi("10", "30"));
 
 }

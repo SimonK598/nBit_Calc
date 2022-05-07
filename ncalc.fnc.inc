@@ -86,7 +86,19 @@ procedure nCalc.swapNrs(){
     this.swap = TRUE;
 }
 
-procedure nCalc.leading0(){
+procedure nCalc.leading0(mode){
+    cut0 = <>;
+    switch (mode){
+        case(1):
+            cut0 = &this.nr1;
+            break;
+        case(2):
+            cut0 = &this.nr2;
+            break;
+        case(3):
+            cut0 = &this.result;
+            break;
+    }
     runLoop = TRUE;
     idx = 0;
     while(runLoop){
@@ -197,6 +209,7 @@ function nCalc.divi(){
     echo "divi()...\n";
     
     n1len = sizeof(this.nr1);
+    removeP0(&this.nr2);
     n2len = sizeof(this.nr2);
     
     nCalc preMul.[];
@@ -220,9 +233,12 @@ function nCalc.divi(){
     idx = 0;
     calculating = TRUE;
     while (calculating){
+        removeP0(&above);
         echo "---> above: " # above # endl;
         echo "---> bwlow: " # this.nr2 # endl;
-        if (maxi(above, this.nr2) == -1){
+        maxAB = maxi(above, this.nr2);
+        echo "================> maxAB: " # form("%d", maxAB) # endl;
+        if (maxAB == -1){
             echo "above is smaller than below ->\n";
             if (n1Curpos >= n1len){
                 echo "n1 has no more places ->\n";
@@ -247,6 +263,7 @@ function nCalc.divi(){
             n1Curpos++;
             continue; 
         }
+        echo "above is equal or greater than below\n";
 
         jidx = 4;
         jidx_c = jidx;
@@ -254,12 +271,13 @@ function nCalc.divi(){
         // echo tree("premul", &preMul) # endl;
         while (!found){
             echo "jdix: " # form("%d", jidx) # endl;
-            echo "preMul.result" # preMul.[jidx].result # endl;
+            echo "---> above: " # above # endl;
+            echo "preMul.result " # preMul.[jidx].result # endl;
             switch (maxi(preMul.[jidx].result, above)){
                 // premul result is bigger -> go lower || if previous was lower -> found
                 case (1):
                     if(jidx_c < jidx){
-                        // echo "found jidx (1)\n";
+                        echo "<<<<<<<<<<<<<<<found jidx (1)\n";
                         found = TRUE;
                         jidx = jidx_c;
                     }else{
@@ -276,13 +294,13 @@ function nCalc.divi(){
                     break;
                 // premul result is equal -> found
                 case (0):
-                    // echo "found jidx (0)\n";
+                    echo "<<<<<<<<<<<<<<<found jidx (0)\n";
                     found = TRUE;
                     break;
                 // premul is smaller -> check previous and go up if prev was smaller
                 case (-1):
                     if (jidx_c > jidx){
-                        // echo "found jidx (-1)\n";
+                        echo "found jidx (-1)\n";
                         found = TRUE;
                         // jidx = jidx_c;
                     }else{
@@ -306,8 +324,18 @@ function nCalc.divi(){
         inbtw:subt();
         inbtw:printCalc();
         above = inbtw.result;
+        echo "hex above before:" # form("%C", above) # endl;
+        if(n1Curpos < n1len){
+            above = above # this.nr1[n1Curpos];
+            n1Curpos++;
+        }
+        removeP0(&above);
+        echo "hex above after:" # form("%C", above) # endl;
+        echo ">>> above after remove: " # above # endl;
+        echo "n1len: " # form("%d", n1len) # endl # "curPos: " # form("%d", n1Curpos) # endl;
 
     }
+    this:leading0(3);
 
     echo "divi() done!\n";
 }
@@ -368,7 +396,7 @@ function nCalc.mult(){
     if (this.hasDP){
         this:addDP(3);
     }
-    this:leading0();
+    this:leading0(3);
     // echo "--------------> multi() done!\n";
 }
 
@@ -480,7 +508,7 @@ function nCalc.subt(){
     if (this.hasDP){
         this:addDP(3);
     }
-    this:leading0();
+    this:leading0(3);
     if(swap){
         this.result = "-" # this.result;
     }
