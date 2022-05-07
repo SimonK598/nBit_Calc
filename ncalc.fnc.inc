@@ -90,6 +90,7 @@ procedure nCalc.leading0(){
     runLoop = TRUE;
     idx = 0;
     while(runLoop){
+        echo "this.result[" # form("%d", idx) # "]: " # this.result[idx] # endl;
         switch (this.result[idx]) {
             case ("0"):
                 idx++;
@@ -100,8 +101,15 @@ procedure nCalc.leading0(){
                 break;
             default:
                 runLoop = FALSE;
+                if(idx >= sizeof(this.result)){
+                    this.result = "0";
+                }
                 this.result = this.result[idx..$];
                 break;
+        }
+        if (runLoop == TRUE && idx == sizeof(this.result)){
+            this.result = "0";
+            break;
         }
     }
 }
@@ -201,35 +209,63 @@ function nCalc.divi(){
     nCalc preMul.[];
     
     idx = 0;
-    while(idx < 9){
-        preMul.[idx]:Create(this.nr2, idx+1, "*");
+    while(idx < 10){
+        preMul.[idx]:Create(this.nr2, form("%d",idx), "*");
         preMul.[idx]:mult();
+        // preMul.[idx]:printCalc();
         idx++;
     }
     
-    above = this.nr1[idx..idx+n2len-1];
+    idx = 0;
+    above = this.nr1[idx..(idx+n2len-1)];
+    // echo "above: " # above # endl;
     n1Curpos = idx+n2len;
     nCalc inbtw;
     inbtw:Create("0","0","-");
 
+    decAdded = FALSE;
     idx = 0;
     calculating = TRUE;
     while (calculating){
-        if (maxi(above, this.nr2 == -1)){
-            above = above # this.nr1[n1Curpos];
+        echo "---> above: " # above # endl;
+        echo "---> bwlow: " # this.nr2 # endl;
+        if (maxi(above, this.nr2) == -1){
+            echo "above is smaller than below ->\n";
+            if (n1Curpos >= n1len){
+                echo "n1 has no more places ->\n";
+                if (above == "0"){
+                    echo "above is 0 -> done\n";
+                    calculating = FALSE;
+                    break;
+                }else{
+                    echo "above is not 0 -> append 0 to result and continue...\n";
+                    above = above # "0";
+                    if(!decAdded){
+                        this.result = this.result # ",";
+                        decAdded = TRUE;
+                    }
+                }
+            }else{
+                echo "n1 has places left -> get digit and continue...\n";
+                above = above # this.nr1[n1Curpos];
+                echo "---> new above is: " # above # endl;
+                this.result = this.result # "0";
+            }
             n1Curpos++;
-            this.result = this.result # "0";
             continue; 
         }
 
         jidx = 4;
         jidx_c = jidx;
         found = FALSE;
+        // echo tree("premul", &preMul) # endl;
         while (!found){
+            // echo "jdix: " # form("%d", jidx) # endl;
             switch (maxi(preMul.[jidx].result, above)){
                 // premul result is bigger -> go lower || if previous was lower -> found
                 case (1):
                     if(jidx_c < jidx){
+                        // echo "found jidx (1)\n";
                         found = TRUE;
                         jidx = jidx_c;
                     }else{
@@ -240,18 +276,20 @@ function nCalc.divi(){
                             jidx = jidx - 1;
                         }
                     }
-                    jidx_c = jidx;
-                    jidx = jidx - 1;
+                    // jidx_c = jidx;
+                    // jidx = jidx - 1;
                     break;
                 // premul result is equal -> found
                 case (0):
+                    // echo "found jidx (0)\n";
                     found = TRUE;
                     break;
                 // premul is smaller -> check previous and go up if prev was smaller
                 case (-1):
                     if (jidx_c > jidx){
+                        // echo "found jidx (-1)\n";
                         found = TRUE;
-                        jidx = jidx_c;
+                        // jidx = jidx_c;
                     }else{
                         if (jidx_c < jidx){
                             jidx_c = jidx;
@@ -263,11 +301,15 @@ function nCalc.divi(){
                     break;
             }
         }
+        echo "chosen preMul: \n" # endl;
+        preMul.[jidx]:printCalc();
         this.result = this.result # form("%d", jidx);
+        echo this.result # endl;
 
         inbtw.nr1 = above;
         inbtw.nr2 = preMul.[jidx].result;
         inbtw:subt();
+        inbtw:printCalc();
         above = inbtw.result;
 
     }
@@ -330,8 +372,8 @@ function nCalc.mult(){
     this.result =  add2.result;
     if (this.hasDP){
         this:addDP(3);
-        this:rmleading0();
     }
+    this:leading0();
     // echo "--------------> multi() done!\n";
 }
 
