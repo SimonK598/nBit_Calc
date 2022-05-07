@@ -161,7 +161,7 @@ function maxi(nr1, nr2){
     // nr1 and nr2 are NOT equal -> go bytewise till one or the other is bigger
     idx = 0;
     while (idx < nr1Len){
-        // echo "idx: " # form("%d",idx) # endl;
+        echo "idx: " # form("%d",idx) # endl;
         // echo "nr1[idx]: " # convert2String(nr1[idx]) # endl;
         // echo "nr2[idx]: " # convert2String(nr2[idx]) # endl;
         num1 = scan("%d",nr1[idx]);
@@ -181,6 +181,16 @@ function maxi(nr1, nr2){
                 // nr2 is bigger -> return -1
                 return -1;
             }
+            // nr2 is bigger 
+            // (to be here both numbers need to be the same length so checking for index is not required)
+        
+            // if (idx < nr1Len-1){
+            //     echo "-1" # endl;
+            //     return -1;
+            // }
+        
+            // echo "-1" # endl;
+            // return -1;
         }
     }
     // echo "1\n" # endl;
