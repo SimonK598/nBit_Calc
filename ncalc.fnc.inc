@@ -90,7 +90,7 @@ procedure nCalc.leading0(){
     runLoop = TRUE;
     idx = 0;
     while(runLoop){
-        echo "this.result[" # form("%d", idx) # "]: " # this.result[idx] # endl;
+        // echo "this.result[" # form("%d", idx) # "]: " # this.result[idx] # endl;
         switch (this.result[idx]) {
             case ("0"):
                 idx++;
@@ -101,15 +101,8 @@ procedure nCalc.leading0(){
                 break;
             default:
                 runLoop = FALSE;
-                if(idx >= sizeof(this.result)){
-                    this.result = "0";
-                }
                 this.result = this.result[idx..$];
                 break;
-        }
-        if (runLoop == TRUE && idx == sizeof(this.result)){
-            this.result = "0";
-            break;
         }
     }
 }
@@ -260,7 +253,8 @@ function nCalc.divi(){
         found = FALSE;
         // echo tree("premul", &preMul) # endl;
         while (!found){
-            // echo "jdix: " # form("%d", jidx) # endl;
+            echo "jdix: " # form("%d", jidx) # endl;
+            echo "preMul.result" # preMul.[jidx].result # endl;
             switch (maxi(preMul.[jidx].result, above)){
                 // premul result is bigger -> go lower || if previous was lower -> found
                 case (1):
@@ -273,6 +267,7 @@ function nCalc.divi(){
                             jidx_c = jidx;
                             jidx = jidx - 1;
                         }else{
+                            echo "sub from jidx\n";
                             jidx = jidx - 1;
                         }
                     }
