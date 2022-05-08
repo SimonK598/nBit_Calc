@@ -263,7 +263,8 @@ procedure nCalc.divi(){
     // echo "|==========================================>\n";
     // echo "|>>> calc sols\n";
 
-    
+    decPlaces = 0;
+    decP_c = 0;
 
     sols = <>;
     nCalc prep;
@@ -394,11 +395,24 @@ procedure nCalc.divi(){
                         this.result = this.result # ",";
                         decPSet = TRUE;
                     }
+
                 }
             }
             above = above # this.nr1[curPosA];
             curPosA++;
         }else{
+            
+            decPlaces++;
+            if(decPlaces == 100000){
+                decP_c++;
+                nCalc tmpDecpl;
+                tmpDecpl:Create(form("%d",decP_c), "100000", "*");
+                // tmpDecpl:printCalc();
+                tmpDecpl:mult();
+                echo "temporary result with " # tmpDecpl.result # " decimal places:" # this.result # endl # endl # endl;
+                ~tmpDecpl;
+                decPlaces = 0;
+            }
             // echo "|     next digit doesnt exists -> appending ',' to result and '0' to above\n";
             if (above != "0"){
                 if (!decPSet){
