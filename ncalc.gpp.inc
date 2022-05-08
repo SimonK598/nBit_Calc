@@ -145,7 +145,7 @@ procedure removeP0(str){
     idx = 0;
     while(runLoop){
         // echo "this.result[" # form("%d", idx) # "]: " # this.result[idx] # endl;
-        switch (str[idx]) {
+        switch (str[idx]) with |==| {
             case ("0"):
                 idx++;
                 break;

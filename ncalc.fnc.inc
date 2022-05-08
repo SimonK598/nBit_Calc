@@ -209,12 +209,27 @@ procedure nCalc.addDP(mod){
 
 // >>> Actual math  <<< 
 
-function nCalc.divi(){
+procedure nCalc.divi(){
     echo "divi()...\n";
+
+    if (this.nr2 == "0"){
+        this.result = "UNDEFINED";
+        return;
+    }else{
+        if(this.nr1 == "0"){
+            this.result = "0";
+            return;
+        }else{
+            if(this.nr1 |==| this.nr2){
+                this.result = "1";
+                return;
+            }
+        }
+    }
 
     this:leading0(2);
     below = this.nr2;
-    above = this.nr1[0..(sizeof(below)-1)];
+    above = this.nr1[0];
     
     n1CurPos = sizeof(below);
 
@@ -259,7 +274,7 @@ function nCalc.divi(){
                         echo "if branch 2\n";
                         done = TRUE;
                     }else{
-                    echo "if branch 3\n";
+                        echo "if branch 3\n";
                         above = above # "0";
                         
                         echo "|above is: " # above # endl;
@@ -276,7 +291,9 @@ function nCalc.divi(){
             echo "loop1 broken\n";
             break;
         }
-
+        
+                        echo "|above is: " # above # endl;
+                        echo "|above hex: "# form("%C", above) # endl;
         found = FALSE;
         idx = 4;
         idx_c = idx;
@@ -359,7 +376,7 @@ function nCalc.divi(){
     echo "divi() done!\n";
 }
 
-function nCalc.mult(){
+procedure nCalc.mult(){
     // echo "--------------> multi()...\n";
 
     nCalc add2;
@@ -419,7 +436,7 @@ function nCalc.mult(){
     // echo "--------------> multi() done!\n";
 }
 
-function nCalc.subt(){
+procedure nCalc.subt(){
     swap = FALSE;
     
     nr1Len = sizeof(this.nr1)-1;
@@ -447,7 +464,7 @@ function nCalc.subt(){
             if(maxiRet == 0){
                 // nr1 is equal to nr2 -> result = 0
                 this.result = "0";
-                return 0;
+                return;
             }else{
                 if (maxiRet == -1){
                     // echo "swap bc of biggerVal/maxi()\n";
@@ -534,7 +551,7 @@ function nCalc.subt(){
 
 }
 
-function nCalc.addi(){
+procedure nCalc.addi(){
     carry = 0;
     result = <>;
 

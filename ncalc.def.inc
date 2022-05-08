@@ -14,10 +14,10 @@ struct nCalc{
     .result;
     .swap;
 
-    function divi ();
-    function mult ();
-    function subt ();
-    function addi ();
+    procedure divi ();
+    procedure mult ();
+    procedure subt ();
+    procedure addi ();
 
     procedure printCalc();
     procedure swapNrs();
