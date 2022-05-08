@@ -143,22 +143,34 @@ procedure removeP0(str){
     runLoop = TRUE;
     strlen = sizeof(str);
     idx = 0;
+    // echo "str is in hex: " # form("%C", str) # endl;
     while(runLoop){
         // echo "this.result[" # form("%d", idx) # "]: " # this.result[idx] # endl;
         switch (str[idx]) with |==| {
-            case ("0"):
+            case (<30>):
+                // echo "<30> current byte: " # form("%C", str[idx]) # endl;
+                // echo "found <30>\n";
                 idx++;
                 break;
-            case (","):
+            case (<2C>):
+                //<2C> == ','
+                // echo "<2C> current byte: " # form("%C", str[idx]) # endl;
+                // echo "found <2C>\n";
                 runLoop = FALSE;
                 str = "0" # str[idx..$];
                 break;
             default:
+                // echo "<DEFAULT> current byte: " # form("%C", str[idx]) # endl;
+                
+                // echo "found <" # form("%C", str[idx]) # ">\n";
+                // echo "window: " # form("%C", str[idx..$]) # endl;
+                // echo "idx: " # form("%d", idx) # endl;
                 runLoop = FALSE;
                 str = str[idx..$];
                 break;
         }
-        if  (idx >= sizeof(str)){
+        if  (sizeof(str) == 0){
+            // echo "changing str to '0'\n";
             str = "0";
             runLoop = FALSE;
         }
@@ -167,18 +179,19 @@ procedure removeP0(str){
 
 function maxi(nr1, nr2){
     
-    echo "hex n1:" # form("%C", nr1) # endl;
-    echo "hex n2:" # form("%C", nr2) # endl;
+    // echo "|find max between: " # nr1 # ", and: " # nr2 # endl;
+    // echo "hex n1:" # form("%C", nr1) # endl;
+    // echo "hex n2:" # form("%C", nr2) # endl;
     removeP0(&nr1);
     removeP0(&nr2);
-    echo "hex n1:" # form("%C", nr1) # endl;
-    echo "hex n2:" # form("%C", nr2) # endl;
+    // echo "hex n1:" # form("%C", nr1) # endl;
+    // echo "hex n2:" # form("%C", nr2) # endl;
     
-    echo "find max between: " # nr1 # ", and: " # nr2 # endl;
+    // echo "|find max between: " # nr1 # ", and: " # nr2 # endl;
     nr1Len = sizeof(nr1);
-    echo "n1len: " # form("%d", nr1Len) # endl;
+    // echo "n1len: " # form("%d", nr1Len) # endl;
     nr2Len = sizeof(nr2);
-    echo "n2len: " # form("%d", nr2Len) # endl;
+    // echo "n2len: " # form("%d", nr2Len) # endl;
 
     switch (max(nr1Len, nr2Len)){
         case (1):
@@ -203,14 +216,14 @@ function maxi(nr1, nr2){
         // echo "nr1[idx]: " # convert2String(nr1[idx]) # endl;
         // echo "nr2[idx]: " # convert2String(nr2[idx]) # endl;
         num1 = scan("%d",nr1[idx]);
-        echo "nr1[idx]: " # form("%d",scan("%d",nr1[idx])) # endl;
+        // echo "nr1[idx]: " # form("%d",scan("%d",nr1[idx])) # endl;
         num2 = scan("%d",nr2[idx]);
-        echo "nr2[idx]: " # form("%d",scan("%d",nr2[idx])) # endl;
+        // echo "nr2[idx]: " # form("%d",scan("%d",nr2[idx])) # endl;
         // num3 = num1 + num2;
         // echo "debug num3: " # form("%d", num3) # endl;
         if (num1 > num2){
             // echo "nr1: " # form("%d", num1) # " is bigger than nr2: " # form("%d", num2) # endl;
-            echo "returning 1\n";
+            // echo "returning 1\n";
             return 1;
         }else{
             if(num1 == num2){

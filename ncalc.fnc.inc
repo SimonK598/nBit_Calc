@@ -46,6 +46,25 @@ procedure nCalc.Create(nr1, nr2, op){
     this.swap = FALSE;
 
 }
+procedure nCalc.Copy(copy2this){
+    nCalc copy2this;
+    // copy2this:Create("0", "0", "*");
+    
+    copy2this.nr1 = this.nr1;
+    copy2this.nr1decPos = this.nr1decPos;
+    
+    copy2this.nr2 = this.nr2;
+    copy2this.nr2decPos = this.nr2decPos;
+    
+    copy2this.hasDP = TRUE;
+    copy2this.decCount = this.decCount;
+    
+    copy2this.operator = this.operator;
+    copy2this.result = this.result;
+    copy2this.swap = this.swap;
+    // return copy2this;
+
+}
 
 procedure nCalc.printCalc(){
     echo "|-[printCalc]----------------------->\n";
@@ -116,7 +135,7 @@ procedure nCalc.leading0(mode){
                 cut0 = cut0[idx..$];
                 break;
         }
-        if  (idx >= sizeof(cut0)){
+        if  (sizeof(cut0) == 0){
             cut0 = "0";
             runLoop = FALSE;
         }
@@ -210,174 +229,232 @@ procedure nCalc.addDP(mod){
 // >>> Actual math  <<< 
 
 procedure nCalc.divi(){
-    echo "divi()...\n";
+    // echo "divi()...\n";
+    nCalc restoreThis;
+    restoreThis:Create("0", "0", "/");
+    this:Copy(&restoreThis);
+    this:leading0(1);
+    this:leading0(2);
+    this:Create(this.nr1, this.nr2, "/");
 
-    if (this.nr2 == "0"){
-        this.result = "UNDEFINED";
-        return;
-    }else{
-        if(this.nr1 == "0"){
-            this.result = "0";
+    // echo "this.nr1: " # this.nr1 # endl;
+    // echo "this.nr2: " # this.nr2 # endl;
+
+    if (this.nr1 == "0"){
+        if (this.nr2 == "0"){
+            this.result = "!UNDEFINED!";
             return;
         }else{
-            if(this.nr1 |==| this.nr2){
-                this.result = "1";
+            this.result = "0";
+            return;
+        }
+    }else{
+        if (this.nr2 == "0"){
+            this.result = "!UNDEFINED!";
+            return;
+        }else{
+            if (this.nr2 == 1){
+                this.result = &this.nr1;
                 return;
             }
         }
     }
 
-    this:leading0(2);
-    below = this.nr2;
-    above = this.nr1[0];
-    
-    n1CurPos = sizeof(below);
+    // echo "|==========================================>\n";
+    // echo "|>>> calc sols\n";
 
-    nCalc preMu.[];
-    idx = 0;
-    while(idx < 10){
-        preMu.[idx]:Create(below, form("%d", idx), "*");
-        preMu.[idx]:mult();
-        idx++;
+    
+
+    sols = <>;
+    nCalc prep;
+    prep:Create("0", "0", "*");
+    // prep:printCalc();
+    pIdx = 0;
+    while (pIdx < 10){
+        prep.nr1 = form("%d", pIdx);
+        prep:leading0(1);
+        // // echo "prep.nr1: " # form("%C", prep.nr1) # endl;
+        prep.nr2 = this.nr2;
+        prep:leading0(2);
+        // // echo "prep.nr2: " # form("%C", prep.nr2) # endl;
+        prep:mult();
+        // prep:printCalc();
+        sols.(pIdx) = prep.result;
+        pIdx++;
     }
+    ~prep;
+    // echo "|<<< done calcing sols\n";
+    // echo "|------------------------------------------>\n";
 
-    n1len = sizeof(this.nr1);
-    n2len = sizeof(this.nr2);
-    
-    nCalc cNow;
-    cNow:Create("0","0","-");
+    nCalc inbtw;
+    inbtw:Create("0", "0", "-");
+
+    // echo "|==> entering main loop...\n";
     done = FALSE;
+    curPosA = 0;
     decPSet = FALSE;
-    while (!done){
-        switch (maxi(above, below)){
-            case (0):
-                echo "maxi() returned: 0\n";
-                break;
-            case (1):
-                echo "maxi() returned: 1\n";
-                break;
-            case (-1):
-                echo "--------- maxi() returned: -1\n";
-                echo "above: " # above # endl;
-                echo "n1CurPos: " # form("%d", n1CurPos) # endl;
-                echo "n1len: " # form("%d", n1len) # endl;
-                if (n1CurPos < n1len){
-                    echo "if branch 1\n";
-                    above = above # this.nr1[n1CurPos];
-                                
-                    echo "|above is: " # above # endl;
-                    echo "|above hex: "# form("%C", above) # endl;
-
-                    n1CurPos++;
-                }else{
-                    if (above == "0"){
-                        echo "if branch 2\n";
-                        done = TRUE;
-                    }else{
-                        echo "if branch 3\n";
-                        above = above # "0";
-                        
-                        echo "|above is: " # above # endl;
-                        echo "|above hex: "# form("%C", above) # endl;
-
-                        if(!decPSet){
-                            this.result = this.result # ",";
-                            decPSet = TRUE;
-                        }
-                    }
-                }
-        }
+    above = this.nr1[curPosA];
+    curPosA++;
+    below = &this.nr2;
+    while (curPosA <= sizeof(this.nr1)){
         if (done){
-            echo "loop1 broken\n";
             break;
         }
-        
-                        echo "|above is: " # above # endl;
-                        echo "|above hex: "# form("%C", above) # endl;
+        // maxAB = maxi(&above, &below);
+        // echo "|     above: " # above # endl;
+        // echo "|     below: " # below # endl;
+        // echo "|     this:\n";
+        // this:printCalc();
+
+        // echo "|------------------------------------------>\n";
         found = FALSE;
         idx = 4;
-        idx_c = idx;
-        while (TRUE){
-            echo "loop2 idx: " # form("%d", idx) # endl;
-            maxiAR = maxi(above, preMu.[idx].result); 
-            echo "maxiAR: " #form("%d", maxiAR) # endl;
-            switch (maxiAR){
+        maxAB = maxi(&above, &sols.(idx));
+        carry = 0;
+        // echo "|>>> entering sol finder loop...\n";
+        while (!found){
+            switch (maxAB){
+                // above is greater than sol
                 case (1):
-                // above is greater than preMu result
-                    switch (max(idx, idx_c)){
+                    // echo "|     switch(maxAB) -> (1)\n";
+                    switch (carry){
+                        // carry was 1 -> keep going up
                         case (1):
-                            idx_c = idx;
+                            // echo "|          switch(carry) -> (1)\n";
                             idx++;
+                            carry = 1;
+                            maxAB = maxi(&above, &sols.(idx));
                             break;
+                        // first run; above is greater so -> go up 
                         case (0):
+                            // echo "|          switch(carry) -> (0)\n";
                             idx++;
+                            carry = 1;
+                            maxAB = maxi(&above, &sols.(idx));
                             break;
+                        // carry was -1 -> previous sol was bigger than above -> curIdx is highest
                         case (-1):
-                            echo "loop2 sw(1;-1) found at idx: " # form("%d", idx) # endl;
+                            // echo "|          switch(carry) -> (-1)\n";
                             found = TRUE;
                             break;
                     }
                     break;
-                // above is equal to preMu result
+                // above is equal to sol -> found sol
                 case (0):
-                    switch (max(idx, idx_c)){
+                    // echo "|     switch(maxAB) -> (0)\n";
+                    found = TRUE;
+                    break;
+                // above is less than sol -> go down
+                case (-1):
+                    // echo "|     switch(maxAB) -> (-1)\n";
+                    switch (carry){
+                        // carry is 1 -> previous sol was less -> carry is highest
                         case (1):
-                        case (0):
-                        case (-1):
-                            echo "loop2 sw(0;ANY) found at idx: " # form("%d", idx) # endl;
+                            // echo "|          switch(carry) -> (1)\n";
+                            idx--;
                             found = TRUE;
                             break;
-                    }
-                    break;
-                // above is less than preMu result
-                case (-1):
-                    switch (max(idx, idx_c)){
-                        // idx is greater than carry
-                        case (1):
-                            idx_c = idx;
-                            idx--;
-                            break;
-                        // idx is equal to carry
+                        // first run; above is less so -> go down
                         case (0):
+                            // echo "|          switch(carry) -> (0)\n";
                             idx--;
+                            carry = -1;
+                            maxAB = maxi(&above, &sols.(idx));
                             break;
-                        // idx is less than carry
+                        // carry was -1 -> previous sol was greater -> go down 
                         case (-1):
-                            idx_c = idx_c;
+                            // echo "|          switch(carry) -> (-1)\n";
                             idx--;
-                            // found = TRUE;
-                            // echo "loop2 sw(-1;-1) found at idx: " # form("%d", idx) # endl;
+                            carry = -1;
+                            maxAB = maxi(&above, &sols.(idx));
                             break;
                     }
                     break;
-            }
-            if (found){
-                echo "loop broken\n";
-                break;
             }
         }
-        echo "|---------------------------------------\n";
-        echo "|------>idx: "# form("%d", idx) # endl;
-        preMu.[idx]:printCalc();
-        this.result #= form("%d", idx);
+        // echo "|<<< solfinder done\n";
+        // echo "|------------------------------------------>\n";
+        // echo "|>>> final calculation before rerun...\n";
+        this.result = this.result # form("%d", idx);
 
-        echo "|result is: " # this.result # endl;
-        cNow.nr1 = above;
-        cNow.nr2 = preMu.[idx].result;
-        cNow:subt();
-        cNow:printCalc();
-        above = cNow.result;
-        echo "|above is: " # above # endl;
-        echo "|above hex: "# form("%C", above) # endl;
-        echo "|---------------------------------------\n";
+        inbtw.nr1 = &above;
+        inbtw.nr2 = &sols.(idx);
+        inbtw:subt();
+        // echo "|     inbtw:\n";
+        // inbtw:printCalc();
+        above = inbtw.result;
+        removeP0(&above);
+        // echo "|>>> check if next digit exists...\n";
+        if (curPosA < sizeof(this.nr1)){
+            // echo "|     next digit exists -> appending to above and curPosA++\n";
+            if(this.nr1[curPosA] == ","){
+                curPosA++;
+                if (curPosA >= sizeof(this.nr1)){
+                    if (!decPSet){
+                        this.result = this.result # ",";
+                        decPSet = TRUE;
+                    }
+                }
+            }
+            above = above # this.nr1[curPosA];
+            curPosA++;
+        }else{
+            // echo "|     next digit doesnt exists -> appending ',' to result and '0' to above\n";
+            if (above != "0"){
+                if (!decPSet){
+                    this.result = this.result # ",";
+                    decPSet = TRUE;
+                }
+            }else{
+                done = TRUE;
+            }
+            above = above # "0";
+        }
+        removeP0(&above);
+        // echo "|<<< check for next digit done\n";
+        // echo "|     above: " # above # endl;
+        // echo "|     n1len: " # form("%d", sizeof(this.nr1)) # endl;
+        // echo "|     curPosA: " # form("%d", curPosA) # endl;
+        // echo "|     this:\n";
+        // this:printCalc();
+        // echo "|======> restart\n";
+        // echo "|==========================================>\n";
+
     }
+    // echo "this.result (hex): " # form("%C", this.result) # endl;
+    removeP0(&this.result);
+    restoreThis.result = this.result;
+    restoreThis:Copy(&this);
+    ~restoreThis;
 
-
-    echo "divi() done!\n";
+    // echo "divi() done!\n";
 }
 
 procedure nCalc.mult(){
     // echo "--------------> multi()...\n";
+
+    if (this.nr1 == "0"){
+        this.result = "0";
+        this:leading0(3);
+        return;
+    }else{
+        if(this.nr1 == "1"){
+            this.result = &this.nr2;
+            this:leading0(3);
+            return;
+        }
+    }
+    if(this.nr2 == "0"){
+        this.result = "0";
+        this:leading0(3);
+        return;
+    }else{
+        if(this.nr2 == "1"){
+            this.result = &this.nr1;
+        this:leading0(3);
+            return;
+        }
+    }
 
     nCalc add2;
     add2:Create("0","0","+");
@@ -433,6 +510,7 @@ procedure nCalc.mult(){
         this:addDP(3);
     }
     this:leading0(3);
+    // removeP0(&this.result);
     // echo "--------------> multi() done!\n";
 }
 

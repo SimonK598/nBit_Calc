@@ -26,4 +26,5 @@ struct nCalc{
     procedure addDP(mod);
 
     procedure Create(nr1, nr2, op);
+    procedure Copy(copy2this);
 }
