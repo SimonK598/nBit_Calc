@@ -102,40 +102,48 @@ procedure nCalc.leading0(mode){
     runLoop = TRUE;
     idx = 0;
     while(runLoop){
-        // echo "this.result[" # form("%d", idx) # "]: " # this.result[idx] # endl;
-        switch (this.result[idx]) {
+        // echo "cut0[" # form("%d", idx) # "]: " # cut0[idx] # endl;
+        switch (cut0[idx]) {
             case ("0"):
                 idx++;
                 break;
             case (","):
                 runLoop = FALSE;
-                this.result = "0" # this.result[idx..$];
+                cut0 = "0" # cut0[idx..$];
                 break;
             default:
                 runLoop = FALSE;
-                this.result = this.result[idx..$];
+                cut0 = cut0[idx..$];
                 break;
+        }
+        if  (cut0 == ""){
+            str = "0";
+            runLoop = FALSE;
         }
     }
 }
 
 procedure nCalc.rmleading0(){
     runLoop = TRUE;
-    idx = sizeof(this.result);
-    idx = idx - 1;
-    while(runLoop){
+    len = sizeof(this.result);
+    idx = 0;
+    while(idx < len){
         switch (this.result[idx]) {
             case ("0"):
-                idx = idx - 1;
+            echo "found 0\n";
+                idx++;
                 break;
             case (","):
                 runLoop = FALSE;
-                this.result = this.result[0..idx-1];
+                this.result = this.result[idx..len-1];
                 break;
             default:
                 runLoop = FALSE;
-                this.result = this.result[0..idx];
+                this.result = this.result[idx..len-1];
                 break;
+        }
+        if (idx >= len-1){
+            this.result = "0";
         }
     }
 }
@@ -206,14 +214,15 @@ procedure nCalc.addDP(mod){
 
 // >>> Actual math  <<< 
 
-function nCalc.divi(){
-    echo "divi()...\n";
+procedure nCalc.divi(){
+    // echo "divi()...\n";
 
     sols = <>;
     nCalc prep;
     prep:Create("0", "0", "*");
     // prep:printCalc();
     pIdx = 0;
+    // echo "loop 1\n";
     while (pIdx < 10){
         prep.nr1 = form("%d", pIdx);
         prep:leading0(1);
@@ -231,28 +240,38 @@ function nCalc.divi(){
     n1len = sizeof (this.nr1);
     idx = 0;
     above = <>;
+    // echo "loop 2\n";
     while (idx < n1len){
         above = above # this.nr1[idx];
-        solNr = solFinder(&sols, &above);
-        this.result = this.result # solNr;
+        // removeP0(&above);
+        solNr = solFinder(&sols, above);
+        // echo "loop2: above = " # above # endl;
+        this.result = this.result # form("%d",solNr);
         nCalc tmp;
-        tmp:Create(above, sols.(solNr));
+        tmp:Create(above, sols.(solNr),"-");
         tmp:subt();
+        // tmp:printCalc();
         above = tmp.result;
         ~tmp;
-        removeP0(&above);
+        idx++;
     }
-
+    
+    if (above == "0"){
+        this:leading0(3);
+        return;
+    }
     rounds = 0;
     rounds_c = 0;
     this.result = this.result # ",";
+    // echo "loop 3\n";
     while (TRUE){
         above = above # "0";
         solNr = solFinder(&sols, &above);
-        this.result = this.result # solNr;
+        this.result = this.result # form("%d",solNr);
         nCalc tmp;
-        tmp:Create(above, sols.(solNr));
+        tmp:Create(above, sols.(solNr), "-");
         tmp:subt();
+        // tmp:printCalc();
         above = tmp.result;
         ~tmp;
         removeP0(&above);
@@ -267,7 +286,11 @@ function nCalc.divi(){
             rounds = 0;
         }
     }
-    echo "divi() done!\n";
+    // echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n";
+    // echo "rmleading0...\n";
+    this:leading0(3);
+    // echo "rmleading0 !\n";
+    // echo "divi() done!\n";
 }
 
 function nCalc.mult(){

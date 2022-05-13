@@ -139,6 +139,114 @@ function max(lenA, lenB){
     }
 }
 
+procedure removeP0(str){
+    runLoop = TRUE;
+    strlen = sizeof(str);
+    idx = 0;
+    while(runLoop){
+        // echo "this.result[" # form("%d", idx) # "]: " # this.result[idx] # endl;
+        switch (str[idx]) {
+            case ("0"):
+                idx++;
+                break;
+            case (","):
+                runLoop = FALSE;
+                str = "0" # str[idx..$];
+                break;
+            default:
+                runLoop = FALSE;
+                str = str[idx..$];
+                break;
+        }
+        if  (idx >= strlen){
+            str = "0";
+            runLoop = FALSE;
+        }
+    }
+}
+
+function maxi(nr1, nr2){
+
+    removeP0(&nr1);
+    removeP0(&nr2);
+    // echo "hex n1:" # form("%C", nr1) # endl;
+    // echo "hex n2:" # form("%C", nr2) # endl;
+    
+    // echo "find max between: " # nr1 # ", and: " # nr2 # endl;
+    nr1Len = sizeof(nr1);
+    // echo "n1len: " # form("%d", nr1Len) # endl;
+    nr2Len = sizeof(nr2);
+    // echo "n2len: " # form("%d", nr2Len) # endl;
+
+    switch (max(nr1Len, nr2Len)){
+        case (1):
+            // echo "swreturn 1\n";
+            return 1;
+        case (-1):
+            // echo "swreturn -1\n";
+            return -1;
+        case (0):
+            if (nr1 |==| nr2){
+                // nr1 is equal to nr2
+                return 0;
+            }
+            break;
+    }
+
+    // nr1 and nr2 are NOT equal -> go bytewise till one or the other is bigger
+    idx = 0;
+    while (idx < nr1Len){
+        // echo "idx: " # form("%d",idx) # endl;
+        // echo "nr1[idx]: " # convert2String(nr1[idx]) # endl;
+        // echo "nr2[idx]: " # convert2String(nr2[idx]) # endl;
+        num1 = scan("%d",nr1[idx]);
+        // echo "nr1[idx]: " # form("%d",scan("%d",nr1[idx])) # endl;
+        num2 = scan("%d",nr2[idx]);
+        // echo "nr2[idx]: " # form("%d",scan("%d",nr2[idx])) # endl;
+        // num3 = num1 + num2;
+        // echo "debug num3: " # form("%d", num3) # endl;
+        if (num1 > num2){
+            // echo "nr1: " # form("%d", num1) # " is bigger than nr2: " # form("%d", num2) # endl;
+            // echo "returning 1\n";
+            return 1;
+        }else{
+            if(num1 == num2){
+                // vals at idx are same -> continue;
+                idx++;
+            }else{
+                // nr2 is bigger -> return -1
+                // echo "returning -1\n";
+                return -1;
+            }
+            // nr2 is bigger 
+            // (to be here both numbers need to be the same length so checking for index is not required)
+        
+            // if (idx < nr1Len-1){
+            //     echo "-1" # endl;
+            //     return -1;
+            // }
+        
+            // echo "-1" # endl;
+            // return -1;
+        }
+    }
+    // echo "1\n" # endl;
+    return 1;
+}
+
+
+function maxInt(a, b){
+    if (a == b){
+        return 0;
+    }else{
+        if(a > b){
+            return 1;
+        }else{
+            return -1;
+        }
+    }
+}
+
 function solFinder (sols, above){
     found = FALSE;
     idx = 4;
@@ -206,112 +314,4 @@ function solFinder (sols, above){
         }
     }
     return idx;
-}
-
-procedure removeP0(str){
-    runLoop = TRUE;
-    strlen = sizeof(str);
-    idx = 0;
-    while(runLoop){
-        // echo "this.result[" # form("%d", idx) # "]: " # this.result[idx] # endl;
-        switch (str[idx]) {
-            case ("0"):
-                idx++;
-                break;
-            case (","):
-                runLoop = FALSE;
-                str = "0" # str[idx..$];
-                break;
-            default:
-                runLoop = FALSE;
-                str = str[idx..$];
-                break;
-        }
-        if  (idx >= sizeof(str)){
-            str = "0";
-            runLoop = FALSE;
-        }
-    }
-}
-
-function maxi(nr1, nr2){
-
-    removeP0(&nr1);
-    removeP0(&nr2);
-    echo "hex n1:" # form("%C", nr1) # endl;
-    echo "hex n2:" # form("%C", nr2) # endl;
-    
-    echo "find max between: " # nr1 # ", and: " # nr2 # endl;
-    nr1Len = sizeof(nr1);
-    echo "n1len: " # form("%d", nr1Len) # endl;
-    nr2Len = sizeof(nr2);
-    echo "n2len: " # form("%d", nr2Len) # endl;
-
-    switch (max(nr1Len, nr2Len)){
-        case (1):
-            echo "swreturn 1\n";
-            return 1;
-        case (-1):
-            // echo "swreturn -1\n";
-            return -1;
-        case (0):
-            if (nr1 |==| nr2){
-                // nr1 is equal to nr2
-                return 0;
-            }
-            break;
-    }
-
-    // nr1 and nr2 are NOT equal -> go bytewise till one or the other is bigger
-    idx = 0;
-    while (idx < nr1Len){
-        // echo "idx: " # form("%d",idx) # endl;
-        // echo "nr1[idx]: " # convert2String(nr1[idx]) # endl;
-        // echo "nr2[idx]: " # convert2String(nr2[idx]) # endl;
-        num1 = scan("%d",nr1[idx]);
-        // echo "nr1[idx]: " # form("%d",scan("%d",nr1[idx])) # endl;
-        num2 = scan("%d",nr2[idx]);
-        // echo "nr2[idx]: " # form("%d",scan("%d",nr2[idx])) # endl;
-        // num3 = num1 + num2;
-        // echo "debug num3: " # form("%d", num3) # endl;
-        if (num1 > num2){
-            // echo "nr1: " # form("%d", num1) # " is bigger than nr2: " # form("%d", num2) # endl;
-            echo "returning 1\n";
-            return 1;
-        }else{
-            if(num1 == num2){
-                // vals at idx are same -> continue;
-                idx++;
-            }else{
-                // nr2 is bigger -> return -1
-                // echo "returning -1\n";
-                return -1;
-            }
-            // nr2 is bigger 
-            // (to be here both numbers need to be the same length so checking for index is not required)
-        
-            // if (idx < nr1Len-1){
-            //     echo "-1" # endl;
-            //     return -1;
-            // }
-        
-            // echo "-1" # endl;
-            // return -1;
-        }
-    }
-    // echo "1\n" # endl;
-    return 1;
-}
-
-
-function maxInt(a, b){
-    if (a == b){
-        return 0;
-    }else{
-        if(a > b){
-            return 1;
-        }else{
-            return -1;
-        }
-    }
 }

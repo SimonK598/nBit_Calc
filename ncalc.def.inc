@@ -14,7 +14,7 @@ struct nCalc{
     .result;
     .swap;
 
-    function divi ();
+    procedure divi ();
     function mult ();
     function subt ();
     function addi ();
