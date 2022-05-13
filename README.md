@@ -15,5 +15,5 @@ Reals are ~~blizzard soon (tm)~~ implemented ~~...~~ !
     - calculations above/below 64bit-Signed-Int limit
     - **NOT YET TESTED**
   - Division:
-    - // TODO
-    - // use multiple subtractions or implment manual method?
+    - division is a piece of shit garbage operation
+    - // im still working on it

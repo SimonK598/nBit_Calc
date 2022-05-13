@@ -118,6 +118,7 @@ procedure nCalc.leading0(mode){
         }
     }
 }
+
 procedure nCalc.rmleading0(){
     runLoop = TRUE;
     idx = sizeof(this.result);
@@ -207,9 +208,65 @@ procedure nCalc.addDP(mod){
 
 function nCalc.divi(){
     echo "divi()...\n";
-    
-    
 
+    sols = <>;
+    nCalc prep;
+    prep:Create("0", "0", "*");
+    // prep:printCalc();
+    pIdx = 0;
+    while (pIdx < 10){
+        prep.nr1 = form("%d", pIdx);
+        prep:leading0(1);
+        // // echo "prep.nr1: " # form("%C", prep.nr1) # endl;
+        prep.nr2 = this.nr2;
+        prep:leading0(2);
+        // // echo "prep.nr2: " # form("%C", prep.nr2) # endl;
+        prep:mult();
+        // prep:printCalc();
+        sols.(pIdx) = prep.result;
+        pIdx++;
+    }
+    ~prep;
+
+    n1len = sizeof (this.nr1);
+    idx = 0;
+    above = <>;
+    while (idx < n1len){
+        above = above # this.nr1[idx];
+        solNr = solFinder(&sols, &above);
+        this.result = this.result # solNr;
+        nCalc tmp;
+        tmp:Create(above, sols.(solNr));
+        tmp:subt();
+        above = tmp.result;
+        ~tmp;
+        removeP0(&above);
+    }
+
+    rounds = 0;
+    rounds_c = 0;
+    this.result = this.result # ",";
+    while (TRUE){
+        above = above # "0";
+        solNr = solFinder(&sols, &above);
+        this.result = this.result # solNr;
+        nCalc tmp;
+        tmp:Create(above, sols.(solNr));
+        tmp:subt();
+        above = tmp.result;
+        ~tmp;
+        removeP0(&above);
+        if (above == "0"){
+            break;
+        }
+        rounds++;
+        rounds_c ++;
+        if (rounds == 1000){
+            echo "Result with " # form("%d", rounds_c) # " decimalplaces is\n";
+            this:printCalc();
+            rounds = 0;
+        }
+    }
     echo "divi() done!\n";
 }
 
