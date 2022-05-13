@@ -139,6 +139,75 @@ function max(lenA, lenB){
     }
 }
 
+function solFinder (sols, above){
+    found = FALSE;
+    idx = 4;
+    maxAB = maxi(&above, &sols.(idx));
+    carry = 0;
+    // echo "|>>> entering sol finder loop...\n";
+    while (!found){
+        switch (maxAB){
+            // above is greater than sol
+            case (1):
+                // echo "|     switch(maxAB) -> (1)\n";
+                switch (carry){
+                    // carry was 1 -> keep going up
+                    case (1):
+                        // echo "|          switch(carry) -> (1)\n";
+                        idx++;
+                        carry = 1;
+                        maxAB = maxi(&above, &sols.(idx));
+                        break;
+                    // first run; above is greater so -> go up 
+                    case (0):
+                        // echo "|          switch(carry) -> (0)\n";
+                        idx++;
+                        carry = 1;
+                        maxAB = maxi(&above, &sols.(idx));
+                        break;
+                    // carry was -1 -> previous sol was bigger than above -> curIdx is highest
+                    case (-1):
+                        // echo "|          switch(carry) -> (-1)\n";
+                        found = TRUE;
+                        break;
+                }
+                break;
+            // above is equal to sol -> found sol
+            case (0):
+                // echo "|     switch(maxAB) -> (0)\n";
+                found = TRUE;
+                break;
+            // above is less than sol -> go down
+            case (-1):
+                // echo "|     switch(maxAB) -> (-1)\n";
+                switch (carry){
+                    // carry is 1 -> previous sol was less -> carry is highest
+                    case (1):
+                        // echo "|          switch(carry) -> (1)\n";
+                        idx--;
+                        found = TRUE;
+                        break;
+                    // first run; above is less so -> go down
+                    case (0):
+                        // echo "|          switch(carry) -> (0)\n";
+                        idx--;
+                        carry = -1;
+                        maxAB = maxi(&above, &sols.(idx));
+                        break;
+                    // carry was -1 -> previous sol was greater -> go down 
+                    case (-1):
+                        // echo "|          switch(carry) -> (-1)\n";
+                        idx--;
+                        carry = -1;
+                        maxAB = maxi(&above, &sols.(idx));
+                        break;
+                }
+                break;
+        }
+    }
+    return idx;
+}
+
 procedure removeP0(str){
     runLoop = TRUE;
     strlen = sizeof(str);
