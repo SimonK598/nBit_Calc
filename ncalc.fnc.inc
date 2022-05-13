@@ -208,134 +208,7 @@ procedure nCalc.addDP(mod){
 function nCalc.divi(){
     echo "divi()...\n";
     
-    n1len = sizeof(this.nr1);
-    removeP0(&this.nr2);
-    n2len = sizeof(this.nr2);
     
-    nCalc preMul.[];
-    
-    idx = 0;
-    while(idx < 10){
-        preMul.[idx]:Create(this.nr2, form("%d",idx), "*");
-        preMul.[idx]:mult();
-        // preMul.[idx]:printCalc();
-        idx++;
-    }
-    
-    idx = 0;
-    above = this.nr1[idx..(idx+n2len-1)];
-    // echo "above: " # above # endl;
-    n1Curpos = idx+n2len;
-    nCalc inbtw;
-    inbtw:Create("0","0","-");
-
-    decAdded = FALSE;
-    idx = 0;
-    calculating = TRUE;
-    while (calculating){
-        removeP0(&above);
-        echo "---> above: " # above # endl;
-        echo "---> bwlow: " # this.nr2 # endl;
-        maxAB = maxi(above, this.nr2);
-        echo "================> maxAB: " # form("%d", maxAB) # endl;
-        if (maxAB == -1){
-            echo "above is smaller than below ->\n";
-            if (n1Curpos >= n1len){
-                echo "n1 has no more places ->\n";
-                if (above == "0"){
-                    echo "above is 0 -> done\n";
-                    calculating = FALSE;
-                    break;
-                }else{
-                    echo "above is not 0 -> append 0 to result and continue...\n";
-                    above = above # "0";
-                    if(!decAdded){
-                        this.result = this.result # ",";
-                        decAdded = TRUE;
-                    }
-                }
-            }else{
-                echo "n1 has places left -> get digit and continue...\n";
-                above = above # this.nr1[n1Curpos];
-                echo "---> new above is: " # above # endl;
-                this.result = this.result # "0";
-            }
-            n1Curpos++;
-            continue; 
-        }
-        echo "above is equal or greater than below\n";
-
-        jidx = 4;
-        jidx_c = jidx;
-        found = FALSE;
-        // echo tree("premul", &preMul) # endl;
-        while (!found){
-            echo "jdix: " # form("%d", jidx) # endl;
-            echo "---> above: " # above # endl;
-            echo "preMul.result " # preMul.[jidx].result # endl;
-            switch (maxi(preMul.[jidx].result, above)){
-                // premul result is bigger -> go lower || if previous was lower -> found
-                case (1):
-                    if(jidx_c < jidx){
-                        echo "<<<<<<<<<<<<<<<found jidx (1)\n";
-                        found = TRUE;
-                        jidx = jidx_c;
-                    }else{
-                        if (jidx_c > jidx){
-                            jidx_c = jidx;
-                            jidx = jidx - 1;
-                        }else{
-                            echo "sub from jidx\n";
-                            jidx = jidx - 1;
-                        }
-                    }
-                    // jidx_c = jidx;
-                    // jidx = jidx - 1;
-                    break;
-                // premul result is equal -> found
-                case (0):
-                    echo "<<<<<<<<<<<<<<<found jidx (0)\n";
-                    found = TRUE;
-                    break;
-                // premul is smaller -> check previous and go up if prev was smaller
-                case (-1):
-                    if (jidx_c > jidx){
-                        echo "found jidx (-1)\n";
-                        found = TRUE;
-                        // jidx = jidx_c;
-                    }else{
-                        if (jidx_c < jidx){
-                            jidx_c = jidx;
-                            jidx++;
-                        }else{
-                            jidx++;
-                        }
-                    }
-                    break;
-            }
-        }
-        echo "chosen preMul: \n" # endl;
-        preMul.[jidx]:printCalc();
-        this.result = this.result # form("%d", jidx);
-        echo this.result # endl;
-
-        inbtw.nr1 = above;
-        inbtw.nr2 = preMul.[jidx].result;
-        inbtw:subt();
-        inbtw:printCalc();
-        above = inbtw.result;
-        echo "hex above before:" # form("%C", above) # endl;
-        if(n1Curpos < n1len){
-            above = above # this.nr1[n1Curpos];
-            n1Curpos++;
-        }
-        removeP0(&above);
-        echo "hex above after:" # form("%C", above) # endl;
-        echo ">>> above after remove: " # above # endl;
-        echo "n1len: " # form("%d", n1len) # endl # "curPos: " # form("%d", n1Curpos) # endl;
-
-    }
-    this:leading0(3);
 
     echo "divi() done!\n";
 }
@@ -350,16 +223,10 @@ function nCalc.mult(){
     n2len = sizeof(this.nr2);
 
     if (maxInt(n1len, n2len) == 1){
-        // tmp1 = this.nr1;
-        // this.nr1 = this.nr2;
-        // this.nr2 = tmp1;
-        // ~tmp1;
         this:swapNrs();
 
         n1len = sizeof(this.nr1);
-        // echo "n1l: " # form("%d", n1len) # endl;
         n2len = sizeof(this.nr2);
-        // echo "n2l: " # form("%d", n2len) # endl;
     }
     n2lc = sizeof(this.nr2);
 
@@ -368,12 +235,8 @@ function nCalc.mult(){
 
     while (n1len > 0){
         while (n2len > 0){
-            // echo "before sn1: " # this.nr1[n1len-1] # endl;
-            // echo "before sn2: " # this.nr2[n2len-1] # endl;
             sn1 = scan("%d",this.nr1[n1len-1]);
             sn2 = scan("%d",this.nr2[n2len-1]);
-            // echo "after sn1: " # form("%C", sn1) # endl;
-            // echo "after sn2: " # form("%C", sn2) # endl;
             
             sn3 = form("%d", (sn1*sn2));
 
@@ -407,12 +270,6 @@ function nCalc.subt(){
     nr2Len = sizeof(this.nr2)-1;
     biggerLen = max(nr1Len,nr2Len);
     if (biggerLen == -1){
-        // nr2 is longer (therefore bigger) -> swap nr1 with nr2
-        // tmpNr1 = this.nr1;
-        // this.nr1 = this.nr2;
-        // this.nr2 = tmpNr1;
-        // ~tmpNr1;
-        // this.swap = TRUE;
 
         this:swapNrs();
         
@@ -431,12 +288,6 @@ function nCalc.subt(){
                 return 0;
             }else{
                 if (maxiRet == -1){
-                    // echo "swap bc of biggerVal/maxi()\n";
-                    // tmpNR1 = this.nr1;
-                    // this.nr1 = this.nr2;
-                    // this.nr2 = tmpNR1;
-                    // this.swap = TRUE;
-
                     this:swapNrs();
 
                     nr1Len = sizeof(this.nr1)-1;
