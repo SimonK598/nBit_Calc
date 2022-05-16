@@ -49,18 +49,20 @@ procedure nCalc.Create(nr1, nr2, op){
 
 procedure nCalc.printCalc(){
     echo "|-[printCalc]----------------------->\n";
-    if (this.hasDP |==| <00>){
-        echo "|this.nr1:         " # this.nr1 # endl;
-    }else{
+    if (this.hasDP |==| <01>){
         this:addDP(1);
-        echo "|this.nr1:         " # this.nr1 # endl;
     }
-    if (this.hasDP |==| <00>){
-        echo "|this.nr2:         " # this.nr2 # endl;
-    }else{
+    // }else{
+    //     echo "|this.nr1:         " # this.nr1 # "(" # form("%C", this.nr1) # ")\n";
+    // }
+    echo "|this.nr1:         " # this.nr1 # "(" # form("%C", this.nr1) # ")\n";
+    if (this.hasDP |==| <01>){
         this:addDP(2);
-        echo "|this.nr2:         " # this.nr2 # endl;
     }
+    //     echo "|this.nr2:         " # this.nr2 # endl;
+    // }else{
+    echo "|this.nr2:         " # this.nr2 # "(" # form("%C", this.nr2) # ")\n";
+    // }
     if (this.swap |==| <00>){
         echo "|this.swap:        FALSE" # endl;
     }else{
@@ -216,6 +218,25 @@ procedure nCalc.addDP(mod){
 
 procedure nCalc.divi(){
     // echo "divi()...\n";
+    if (this.nr1 == "0"){
+        this.result = "0";
+        return;
+    }else{
+        if(this.nr2 == "0"){
+            this.result = "UNDEFINED";
+            return;
+        }else{
+            if(this.nr1 |==| this.nr2){
+                this.result = "1";
+                return;
+            }else{
+                if(this.nr2 == "1"){
+                    this.result = this.nr1;
+                    return;
+                }
+            }
+        }
+    }
 
     sols = <>;
     nCalc prep;
@@ -243,7 +264,7 @@ procedure nCalc.divi(){
     // echo "loop 2\n";
     while (idx < n1len){
         above = above # this.nr1[idx];
-        // removeP0(&above);
+        removeP0(&above);
         solNr = solFinder(&sols, above);
         // echo "loop2: above = " # above # endl;
         this.result = this.result # form("%d",solNr);
@@ -293,8 +314,90 @@ procedure nCalc.divi(){
     // echo "divi() done!\n";
 }
 
-function nCalc.mult(){
+procedure nCalc.power(){
+    base = this.nr1;
+    exp = this.nr2;
+    this.nr2 = this.nr1;
+    if(base == "1"){
+        this.result = "1";
+        this.nr2 = exp;
+        return;
+    }
+    if (exp == "1"){
+        this.result = this.nr1;
+        this.nr2 = exp;
+        return;
+    }
+    if (exp == "0"){
+        this.result = "1";
+        this.nr2 = exp;
+        return;
+    }
+
+    nCalc step10;
+    step10:Create(exp, "10", "/");
+    step10:divi();
+    nCalc prog;
+    prog:Create("0", "1", "+");
+    perc = 1;
+
+    nCalc roundC;
+    roundC:Create(exp, "1", "-");
+    roundC:subt();
+    roundC.nr1 = roundC.result;
+    while (TRUE){
+        roundC:subt();
+        roundC.nr1 = roundC.result;
+        this:mult();
+        // this:printCalc();
+        this.nr1 = this.result;
+
+        if (roundC.result != "0"){
+            this.result = <>;
+            // echo "round: " # roundC.result # endl;
+        }else{
+            break;
+        }
+        roundC.result = <>;
+
+        prog:addi();
+        // prog:printCalc();
+        prog.nr1 = prog.result;
+        prog.result = <>;
+        if (maxi(prog.nr1, step10.result) >= 0){
+            // step10:printCalc();
+            prog.nr1 = "0";
+            echo "[" # form("%d",(perc*10)) # "%]";
+            if(perc == 9){
+                echo "\n";
+            }
+            perc++;
+        }
+
+    }
+    this.nr1 = base;
+    this.nr2 = exp;
+}
+
+
+procedure nCalc.mult(){
     // echo "--------------> multi()...\n";
+
+
+    if(this.nr1 == "0" || this.nr2 == "0"){
+        this.result = "0";
+        return;
+    }else{
+        if(this.nr1 == "1"){
+            this.result = this.nr2;
+            return;
+        }else{
+            if (this.nr2 == "1"){
+                this.result = this.nr1;
+                return;
+            }
+        }
+    }
 
     nCalc add2;
     add2:Create("0","0","+");
@@ -302,12 +405,12 @@ function nCalc.mult(){
     n1len = sizeof(this.nr1);
     n2len = sizeof(this.nr2);
 
-    if (maxInt(n1len, n2len) == 1){
-        this:swapNrs();
+    // if (maxInt(n1len, n2len) == 1){
+    //     this:swapNrs();
 
-        n1len = sizeof(this.nr1);
-        n2len = sizeof(this.nr2);
-    }
+    //     n1len = sizeof(this.nr1);
+    //     n2len = sizeof(this.nr2);
+    // }
     n2lc = sizeof(this.nr2);
 
     foll0 = "";
@@ -343,7 +446,7 @@ function nCalc.mult(){
     // echo "--------------> multi() done!\n";
 }
 
-function nCalc.subt(){
+procedure nCalc.subt(){
     swap = FALSE;
     
     nr1Len = sizeof(this.nr1)-1;
@@ -365,7 +468,7 @@ function nCalc.subt(){
             if(maxiRet == 0){
                 // nr1 is equal to nr2 -> result = 0
                 this.result = "0";
-                return 0;
+                return;
             }else{
                 if (maxiRet == -1){
                     this:swapNrs();
@@ -446,7 +549,7 @@ function nCalc.subt(){
 
 }
 
-function nCalc.addi(){
+procedure nCalc.addi(){
     carry = 0;
     result = <>;
 

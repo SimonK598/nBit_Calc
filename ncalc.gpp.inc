@@ -262,6 +262,10 @@ function solFinder (sols, above){
                     // carry was 1 -> keep going up
                     case (1):
                         // echo "|          switch(carry) -> (1)\n";
+                        if (idx+1 == 10){
+                            found = TRUE;
+                            break;
+                        }
                         idx++;
                         carry = 1;
                         maxAB = maxi(&above, &sols.(idx));
@@ -269,6 +273,10 @@ function solFinder (sols, above){
                     // first run; above is greater so -> go up 
                     case (0):
                         // echo "|          switch(carry) -> (0)\n";
+                        if (idx+1 == 10){
+                            found = TRUE;
+                            break;
+                        }
                         idx++;
                         carry = 1;
                         maxAB = maxi(&above, &sols.(idx));

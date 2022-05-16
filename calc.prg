@@ -56,7 +56,7 @@ function splitTerm(term){
                 break;
             case "/":
                 echo "todo: division\n";
-                // echo "nr1: " # term[0..idx-1] # endl;
+                // echo "nr1: " # tesolFinderrm[0..idx-1] # endl;
                 // echo "nr2: " # term[idx+1..strLen-1] # endl;
                 toCalc:Create(term[0..idx-1], term[idx+1..strLen-1], "/");
 
@@ -67,10 +67,97 @@ function splitTerm(term){
                 toCalc:divi();
                 return toCalc;
                 break;
+            case "p":
+                echo "todo: power\n";
+                // echo "nr1: " # tesolFinderrm[0..idx-1] # endl;
+                // echo "nr2: " # term[idx+1..strLen-1] # endl;
+                toCalc:Create(term[0..idx-1], term[idx+1..strLen-1], "^");
+
+                // toCalc.nr1 = term[0..idx-1];
+                // toCalc.nr2 = term[idx+1..strLen-1];
+                // toCalc.operator = "/";
+                
+                toCalc:power();
+                return toCalc;
+                break;
             default:
                 // echo "no sign found -> continue...\n";
                 idx++;
         }
+    }
+}
+
+
+procedure selfTestDM(){
+
+    nCalc multi;
+    nCalc divid;
+    // multi:Create("0","0","*");
+    // divid:Create("0","0","/");
+    idx1 = 1;
+    while (idx1 < 1536){
+        echo "pass nr: " # form("%d", idx1) # endl;
+        idx2 = 1;
+        while (idx2 < 3219 ){
+            if(idx1 > 90){
+                echo "idx1: " # form("%d", idx1) # ", idx2: " # form("%d", idx2) # endl;
+
+            }
+            // echo "<===================================================>\n";
+            multi:Create(form("%d", idx1),form("%d", idx2),"*");
+            // multi.nr1 = form("%d", idx1);
+            // multi.nr2 = form("%d", idx2);
+            // multi:printCalc();
+            multi:mult();
+            
+            // echo "<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>\n";
+
+            divid:Create(multi.result,multi.nr2,"/");
+            // divid.nr1 = multi.result;
+            // divid.nr2 = multi.nr2;
+            // divid:printCalc();
+            divid:divi();
+
+            if(divid.result |!=| multi.nr1){
+                echo "Calculation error at:\n";
+                divid:printCalc();
+                multi:printCalc();
+                echo "Expected: " # multi.nr1 # ", but was: " # divid.result # endl;
+                toBreak = TRUE;
+                return;
+            }
+            ~multi;
+            ~divid;
+            idx2++;
+        }
+        idx1++;
+    }
+    echo "tests passed!\n";
+}
+
+
+procedure testMul(){
+    nCalc totest;
+    totest:Create("0", "0", "*");
+    idx1 = 0;
+    while (idx1 < 1536){
+        echo "pass nr: " # form("%d", idx1) # endl;
+        idx2 = 0;
+        while (idx2 < 3219 ){
+            sol = idx1*idx2;
+            totest.nr1 = form("%d", idx1);
+            totest.nr2 = form("%d", idx2);
+            totest:mult();
+            if(totest.result |!=| form("%d",sol)){
+                echo "Calculation error at:\n";
+                totest:printCalc();
+                echo "Expected: " # form("%d",sol) # ", but was: " # totest.result # endl;
+                toBreak = TRUE;
+                return;
+            }
+            idx2++;
+        }
+        idx1++;
     }
 }
 
@@ -247,6 +334,7 @@ procedure main (){
             case "-calc":
                 idx++;
                 term = ARGV.[idx];
+                echo "term: " # term # endl;
                 nCalc toCalc;
                 toCalc = splitTerm(&term);
                 echo "----------------------------------------\n";
@@ -258,6 +346,12 @@ procedure main (){
                 break;
             case "-tsa":
                 selfTestSA();
+                break;
+            case "-tm":
+                testMul();
+                break;
+            case "-tsd":
+                selfTestDM();
                 break;
             case "--help":
                 echo "Usage:" # endl # ARGV.[0] # " [OPTION] [TERM]" # endl;

@@ -15,9 +15,10 @@ struct nCalc{
     .swap;
 
     procedure divi ();
-    function mult ();
-    function subt ();
-    function addi ();
+    procedure power();
+    procedure mult ();
+    procedure subt ();
+    procedure addi ();
 
     procedure printCalc();
     procedure swapNrs();
