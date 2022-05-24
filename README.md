@@ -15,5 +15,5 @@ Reals are ~~blizzard soon (tm)~~ implemented ~~...~~ !
     - calculations above/below 64bit-Signed-Int limit
     - **NOT YET TESTED**
   - Division:
-    - division is a piece of shit garbage operation
+    - Division works for integers (returns real)
     - // im still working on it
